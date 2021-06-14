@@ -8,10 +8,11 @@ package com.vsanchcu.netflix.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vsanchcu.netflix.entity.Category;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -40,15 +41,19 @@ public class TvShowRestModel implements Serializable {
 	private String longDesc;
 	
 	@JsonProperty(value = "year")
+	@JsonFormat(pattern = "yyyy")
 	private Date year;
 	
 	@JsonProperty(value = "recomAge")
 	private int recommAge;
 	
 	@JsonProperty(value = "category")
-	private Category category;
+	private CategoryRestModel category;
 	
 	@JsonProperty(value = "advertising")
 	private String advertising;
+	
+	@JsonProperty(value = "seasons")
+	private List<SeasonRestModel> seasons;
 
 }

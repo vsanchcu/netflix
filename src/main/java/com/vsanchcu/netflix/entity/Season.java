@@ -1,13 +1,6 @@
-/*
- * Category's Entity
- * 
- * @author: VSANCHCU
- * @version: 1.0
- */
 package com.vsanchcu.netflix.entity;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +8,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -27,11 +21,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * The Class Category.
- */
 @Entity
-@Table(name = "CATEGORIES")
+@Table(name = "SEASONS")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -40,20 +31,26 @@ import lombok.Setter;
 @JsonIdentityInfo(
 		generator = ObjectIdGenerators.PropertyGenerator.class, 
 		property = "id")
-public class Category implements Serializable {
+public class Season implements Serializable {
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 3423829448838698320L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9129602107139586553L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
 	private Long id;
 	
-	@Column(name = "NAME", unique = true)
+	@Column(name = "NUMBER")
+	private int number;
+	
+	@Column(name = "NAME")
 	private String name;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
-	private List<TvShow> tvShows;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "TV_SHOW_ID", referencedColumnName = "ID")
+	private TvShow tvShow;
 
 }

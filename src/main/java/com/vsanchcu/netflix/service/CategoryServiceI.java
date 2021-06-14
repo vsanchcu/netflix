@@ -16,6 +16,6 @@ import com.vsanchcu.netflix.model.CategoryRestModel;
 public interface CategoryServiceI {
 
 	List<CategoryRestModel> getCategories();
-	CategoryRestModel getCategoryById(Long id);
+	CategoryRestModel getCategoryById(final Long id);
 
 }
