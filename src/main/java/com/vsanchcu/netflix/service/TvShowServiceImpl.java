@@ -70,8 +70,13 @@ public class TvShowServiceImpl implements TvShowServiceI {
 	}
 
 	@Override
-	public TvShowRestModel updateTvShow(TvShow tvShow) {
+	public TvShowRestModel updateTvShow(final TvShow tvShow) {
 		return modelMapper.map(tvShowRepository.save(tvShow), TvShowRestModel.class);
+	}
+
+	@Override
+	public TvShow findById(final Long id) {
+		return tvShowRepository.findById(id).orElse(null);
 	}
 
 }

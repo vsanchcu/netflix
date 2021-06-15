@@ -21,5 +21,6 @@ public interface TvShowServiceI {
 	List<TvShowRestModel> getTvShowsByCategoryIn(final List<Category> categories);
 	TvShowRestModel getTvShowById(final Long id);
 	TvShowRestModel updateTvShow(final TvShow tvShow);
+	TvShow findById(final Long id);
 
 }

@@ -42,9 +42,15 @@ public class TvShowController {
 	
 	@PostMapping("/netflix/tv-shows/addCategories/{series-id}")
 	public TvShowRestModel addCategories(@RequestBody Set<Category> categories, @PathVariable(value = "series-id") Long seriesId) {
-		final TvShow tvShow = new TvShow();
-		tvShow.setId(seriesId);
-		tvShow.setCategories(categories);
+		final TvShow tvShow = tvShowService.findById(seriesId);
+		tvShow.getCategories().addAll(categories);
+		return tvShowService.updateTvShow(tvShow);
+	}
+	
+	@PostMapping("/netflix/tv-shows/updateTvShow/{series-id}")
+	public TvShowRestModel addCategories(@RequestParam String name, @PathVariable(value = "series-id") Long seriesId) {
+		final TvShow tvShow = tvShowService.findById(seriesId);
+		tvShow.setName(name);
 		return tvShowService.updateTvShow(tvShow);
 	}
 
