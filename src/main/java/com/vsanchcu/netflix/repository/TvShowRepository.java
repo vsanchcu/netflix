@@ -20,6 +20,12 @@ import com.vsanchcu.netflix.entity.TvShow;
 @Repository
 public interface TvShowRepository extends JpaRepository<TvShow, Long> {
 
-	List<TvShow> findByCategory(final Category category);
+	/**
+	 * Find by categories in.
+	 *
+	 * @param categories the categories
+	 * @return the list
+	 */
+	List<TvShow> findByCategoriesIn(final List<Category> categories);
 
 }

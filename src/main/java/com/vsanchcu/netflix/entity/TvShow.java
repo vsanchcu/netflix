@@ -9,6 +9,7 @@ package com.vsanchcu.netflix.entity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +18,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -60,9 +62,11 @@ public class TvShow implements Serializable {
 	@Column(name = "RECOMMENDED_AGE")
 	private int recommAge;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CATEGORY_ID", referencedColumnName = "ID")
-	private Category category;
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "CATEGORIES_TVSHOWS",
+			joinColumns = @JoinColumn(name = "TV_SHOW_ID"),
+			inverseJoinColumns = @JoinColumn(name = "CATEGORY_ID"))
+	private Set<Category> categories;
 	
 	@Column(name = "ADVERTISING")
 	private String advertising;

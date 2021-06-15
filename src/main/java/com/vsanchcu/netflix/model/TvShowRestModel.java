@@ -8,6 +8,7 @@ package com.vsanchcu.netflix.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -46,8 +47,8 @@ public class TvShowRestModel implements Serializable {
 	@JsonProperty(value = "recomAge")
 	private int recommAge;
 	
-	@JsonProperty(value = "category")
-	private CategoryRestModel category;
+	@JsonProperty(value = "categories")
+	private Set<CategoryRestModel> category;
 	
 	@JsonProperty(value = "advertising")
 	private String advertising;

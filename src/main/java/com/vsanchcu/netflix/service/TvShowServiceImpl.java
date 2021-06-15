@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.vsanchcu.netflix.entity.Category;
+import com.vsanchcu.netflix.entity.TvShow;
 import com.vsanchcu.netflix.model.TvShowRestModel;
 import com.vsanchcu.netflix.repository.TvShowRepository;
 
@@ -43,14 +44,14 @@ public class TvShowServiceImpl implements TvShowServiceI {
 	}
 
 	/**
-	 * Gets the tv shows by category.
+	 * Gets the tv shows by category in.
 	 *
-	 * @param category the category
-	 * @return the tv shows by category
+	 * @param categories the categories
+	 * @return the tv shows by category in
 	 */
 	@Override
-	public List<TvShowRestModel> getTvShowsByCategory(final Category category) {
-		return tvShowRepository.findByCategory(category).stream()
+	public List<TvShowRestModel> getTvShowsByCategoryIn(final List<Category> categories) {
+		return tvShowRepository.findByCategoriesIn(categories).stream()
 				.map(tvShow -> modelMapper.map(tvShow, TvShowRestModel.class))
 				.collect(Collectors.toList());
 	}
@@ -66,6 +67,11 @@ public class TvShowServiceImpl implements TvShowServiceI {
 		return tvShowRepository.findById(id)
 				.map(tvShow -> modelMapper.map(tvShow, TvShowRestModel.class))
 				.orElse(null);
+	}
+
+	@Override
+	public TvShowRestModel updateTvShow(TvShow tvShow) {
+		return modelMapper.map(tvShowRepository.save(tvShow), TvShowRestModel.class);
 	}
 
 }

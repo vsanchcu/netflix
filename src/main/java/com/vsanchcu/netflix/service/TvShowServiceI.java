@@ -9,6 +9,7 @@ package com.vsanchcu.netflix.service;
 import java.util.List;
 
 import com.vsanchcu.netflix.entity.Category;
+import com.vsanchcu.netflix.entity.TvShow;
 import com.vsanchcu.netflix.model.TvShowRestModel;
 
 /**
@@ -17,7 +18,8 @@ import com.vsanchcu.netflix.model.TvShowRestModel;
 public interface TvShowServiceI {
 
 	List<TvShowRestModel> getTvShows();
-	List<TvShowRestModel> getTvShowsByCategory(final Category category);
+	List<TvShowRestModel> getTvShowsByCategoryIn(final List<Category> categories);
 	TvShowRestModel getTvShowById(final Long id);
+	TvShowRestModel updateTvShow(final TvShow tvShow);
 
 }
