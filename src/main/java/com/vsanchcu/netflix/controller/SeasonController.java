@@ -33,7 +33,7 @@ public class SeasonController {
 	 * @param seasonId the season id
 	 * @return the seasons by tv show
 	 */
-	@GetMapping("/netflix/{series-id}/seasons")
+	@GetMapping("/netflix/series/{series-id}/seasons")
 	List<SeasonRestModel> getSeasonsByTvShow(@PathVariable(value = "series-id") Long seasonId) {
 		final TvShow tvShow = new TvShow();
 		tvShow.setId(seasonId);
@@ -47,7 +47,7 @@ public class SeasonController {
 	 * @param number the number
 	 * @return the season by tv show and number
 	 */
-	@GetMapping("/netflix/{series-id}/seasons/{season-number}")
+	@GetMapping("/netflix/series/{series-id}/seasons/{season-number}")
 	SeasonRestModel getSeasonByTvShowAndNumber(
 			@PathVariable(value = "series-id") Long seasonId,
 			@PathVariable(value = "season-number") int number) {

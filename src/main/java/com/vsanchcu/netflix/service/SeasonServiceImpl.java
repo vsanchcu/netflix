@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.vsanchcu.netflix.entity.Season;
 import com.vsanchcu.netflix.entity.TvShow;
 import com.vsanchcu.netflix.model.SeasonRestModel;
 import com.vsanchcu.netflix.repository.SeasonRepository;
@@ -55,6 +56,18 @@ public class SeasonServiceImpl implements SeasonServiceI {
 		return seasonRepository.findByTvShowAndNumber(tvShow, number)
 				.map(season -> modelMapper.map(season, SeasonRestModel.class))
 				.orElse(null);
+	}
+
+	/**
+	 * Find by tv show and number.
+	 *
+	 * @param tvShow the tv show
+	 * @param number the number
+	 * @return the season
+	 */
+	@Override
+	public Season findByTvShowAndNumber(TvShow tvShow, int number) {
+		return seasonRepository.findByTvShowAndNumber(tvShow, number).orElse(null);
 	}
 
 }

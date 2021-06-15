@@ -8,6 +8,7 @@ package com.vsanchcu.netflix.service;
 
 import java.util.List;
 
+import com.vsanchcu.netflix.entity.Season;
 import com.vsanchcu.netflix.entity.TvShow;
 import com.vsanchcu.netflix.model.SeasonRestModel;
 
@@ -18,5 +19,6 @@ public interface SeasonServiceI {
 
 	List<SeasonRestModel> getSeasonsByTvShow(final TvShow tvShow);
 	SeasonRestModel getSeasonByTvShowAndNumber(final TvShow tvShow, final int number);
+	Season findByTvShowAndNumber(final TvShow tvShow, final int number);
 
 }

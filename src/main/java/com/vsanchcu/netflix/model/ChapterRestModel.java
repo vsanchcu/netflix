@@ -1,3 +1,9 @@
+/*
+ * 
+ * 
+ * @author: VSANCHCU
+ * @version: 1.0
+ */
 package com.vsanchcu.netflix.model;
 
 import java.io.Serializable;
@@ -5,19 +11,21 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vsanchcu.netflix.entity.Season;
 
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * The Class ChapterRestModel.
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Setter
-public class SeasonRestModel implements Serializable {
+public class ChapterRestModel implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2652161061999600048L;
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 228652500206711650L;
 
 	@JsonProperty(value = "id")
 	private Long id;
@@ -28,12 +36,11 @@ public class SeasonRestModel implements Serializable {
 	@JsonProperty(value = "name")
 	private String name;
 	
-	@JsonProperty(value = "tv-show")
-	@JsonBackReference
-	private TvShowRestModel tvShow;
+	@JsonProperty(value = "duration")
+	private int duration;
 	
-//	@JsonProperty(value = "chapters")
-//	@JsonManagedReference
-//	private List<ChapterRestModel> chapters;
+	@JsonProperty(value = "season")
+	@JsonBackReference
+	private Season season;
 
 }

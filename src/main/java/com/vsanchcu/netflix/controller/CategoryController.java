@@ -36,8 +36,8 @@ public class CategoryController {
 		return categoryService.getCategories();
 	}
 	
-	@GetMapping("/netflix/categories/{id}")
-	public CategoryRestModel getCategoryById(@PathVariable Long id) {
+	@GetMapping("/netflix/categories/{category-id}")
+	public CategoryRestModel getCategoryById(@PathVariable(value = "category-id") Long id) {
 		return categoryService.getCategoryById(id);
 	}
 

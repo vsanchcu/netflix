@@ -7,7 +7,6 @@
 package com.vsanchcu.netflix.model;
 
 import java.io.Serializable;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -32,7 +31,8 @@ public class CategoryRestModel implements Serializable {
 	@JsonProperty(value = "name")
 	private String name;
 	
-	@JsonProperty(value = "tv-shows")
-	private List<TvShowRestModel> tvShows;
+//	@JsonProperty(value = "tv-shows")
+//	@JsonManagedReference
+//	private List<TvShowRestModel> tvShows;
 
 }
