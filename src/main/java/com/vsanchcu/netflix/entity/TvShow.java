@@ -7,10 +7,11 @@
 package com.vsanchcu.netflix.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -71,7 +72,8 @@ public class TvShow implements Serializable {
 	@Column(name = "ADVERTISING")
 	private String advertising;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tvShow")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tvShow", 
+			cascade = CascadeType.REMOVE)
 	private List<Season> seasons;
 
 }

@@ -9,10 +9,15 @@ package com.vsanchcu.netflix.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vsanchcu.netflix.entity.Chapter;
 import com.vsanchcu.netflix.entity.Season;
 import com.vsanchcu.netflix.entity.TvShow;
 import com.vsanchcu.netflix.model.ChapterRestModel;
@@ -64,6 +69,34 @@ public class ChapterController {
 		final Season season = new Season();
 		season.setNumber(seasonNum);
 		return chapterService.getChapterByTvShowAndSeasonAndNumber(tvShow, season, number);
+	}
+	
+	@PostMapping("/netflix/series/{series-id}/seasons/{season-number}/chapters/{chapter-number}")
+	public ResponseEntity<Object> updateName(@RequestParam String name, 
+			@PathVariable(value = "series-id") Long seriesId, 
+			@PathVariable(value = "season-number") int seasonNum, 
+			@PathVariable(value = "chapter-number") int number) {
+		ResponseEntity<Object> result;
+		final TvShow tvShow = new TvShow();
+		tvShow.setId(seriesId);
+		final Season season = new Season();
+		season.setNumber(seasonNum);
+		final Chapter chapter = chapterService.findByTvShowAndSeasonAndNumber(tvShow, season, number);
+		if (chapter != null) {
+			chapter.setName(name);
+			result = ResponseEntity.status(HttpStatus.OK).body(chapterService.updateChapter(chapter));
+		} else {
+			final StringBuilder msj = new StringBuilder();
+			msj.append("El capítulo número ");
+			msj.append(number);
+			msj.append(" de la temporada ");
+			msj.append(seasonNum);
+			msj.append(" de la serie con id ");
+			msj.append(seriesId);
+			msj.append(" no está registrado en BD");
+			result = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msj.toString());
+		}
+		return result;
 	}
 
 }

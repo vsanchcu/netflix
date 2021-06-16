@@ -3,6 +3,7 @@ package com.vsanchcu.netflix.entity;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -47,7 +48,8 @@ public class Season implements Serializable {
 	@JoinColumn(name = "TV_SHOW_ID", referencedColumnName = "ID")
 	private TvShow tvShow;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "season")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "season", 
+			cascade = CascadeType.REMOVE)
 	private List<Chapter> chapters;
 
 }

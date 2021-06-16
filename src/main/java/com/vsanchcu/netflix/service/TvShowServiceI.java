@@ -22,5 +22,6 @@ public interface TvShowServiceI {
 	TvShowRestModel getTvShowById(final Long id);
 	TvShowRestModel updateTvShow(final TvShow tvShow);
 	TvShow findById(final Long id);
+	void deleteTvShow(final Long id);
 
 }

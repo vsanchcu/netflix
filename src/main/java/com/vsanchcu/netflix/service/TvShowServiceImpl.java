@@ -79,4 +79,9 @@ public class TvShowServiceImpl implements TvShowServiceI {
 		return tvShowRepository.findById(id).orElse(null);
 	}
 
+	@Override
+	public void deleteTvShow(final Long id) {
+		tvShowRepository.deleteById(id);
+	}
+
 }

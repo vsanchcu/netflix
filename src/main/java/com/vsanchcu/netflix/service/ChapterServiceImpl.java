@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.vsanchcu.netflix.entity.Chapter;
 import com.vsanchcu.netflix.entity.Season;
 import com.vsanchcu.netflix.entity.TvShow;
 import com.vsanchcu.netflix.model.ChapterRestModel;
@@ -71,6 +72,17 @@ public class ChapterServiceImpl implements ChapterServiceI {
 				tvShow.getId(), season.getNumber(), number)
 				.map(chapter -> modelMapper.map(chapter, ChapterRestModel.class))
 				.orElse(null);
+	}
+
+	@Override
+	public Chapter findByTvShowAndSeasonAndNumber(TvShow tvShow, Season season, int number) {
+		return chapterRepository.findByTvShowIdAndSeasonNumberAndNumber(
+				tvShow.getId(), season.getNumber(), number).orElse(null);
+	}
+
+	@Override
+	public ChapterRestModel updateChapter(Chapter chapter) {
+		return modelMapper.map(chapterRepository.save(chapter), ChapterRestModel.class);
 	}
 
 }
