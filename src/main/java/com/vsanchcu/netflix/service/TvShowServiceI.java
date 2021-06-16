@@ -18,7 +18,7 @@ import com.vsanchcu.netflix.model.TvShowRestModel;
 public interface TvShowServiceI {
 
 	List<TvShowRestModel> getTvShows();
-	List<TvShowRestModel> getTvShowsByCategoryIn(final List<Category> categories);
+	List<TvShowRestModel> getTvShowsByCategoriesIn(final List<Category> categories);
 	TvShowRestModel getTvShowById(final Long id);
 	TvShowRestModel updateTvShow(final TvShow tvShow);
 	TvShow findById(final Long id);

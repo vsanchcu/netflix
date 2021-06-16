@@ -1,7 +1,14 @@
+/*
+ * 
+ * 
+ * @author: VSANCHCU
+ * @version: 1.0
+ */
 package com.vsanchcu.netflix.controller;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -26,36 +33,54 @@ public class TvShowController {
 	@Autowired
 	private TvShowServiceI tvShowService;
 
+	/**
+	 * Gets all tv-shows or the tv-shows by categories.
+	 *
+	 * @param categoriesId: categories' ids (non required)
+	 * @return all tv-shows or the tv-shows by categories
+	 */
 	@GetMapping("/netflix/tv-shows")
-	public List<TvShowRestModel> getTvShowsByCategory(@RequestParam(value = "categories", required = false) Long categoryId) {
+	public List<TvShowRestModel> getTvShowsByCategory(@RequestParam(value = "categories", required = false) List<Long> categoriesId) {
 		List<TvShowRestModel> listTvShows;
-		if (categoryId!=null) {
-			final Category category = new Category();
-			category.setId(categoryId);
-			listTvShows = tvShowService.getTvShowsByCategoryIn(List.of(category));
+		if (categoriesId != null) {
+			final List<Category> categories = categoriesId.stream().map(category -> new Category(category, null, null)).collect(Collectors.toList());
+			listTvShows = tvShowService.getTvShowsByCategoriesIn(categories);
 		} else {
 			listTvShows = tvShowService.getTvShows();
 		}
 		return listTvShows;
 	}
 	
+	/**
+	 * Gets the tv-shows by id.
+	 *
+	 * @param id: tv-show's id
+	 * @return the tv-shows by id
+	 */
 	@GetMapping("/netflix/tv-shows/{tv-show-id}")
 	public TvShowRestModel getTvShowsById(@PathVariable(value = "tv-show-id") Long id) {
 		return tvShowService.getTvShowById(id);
 	}
 	
+	/**
+	 * Adds the categories to tv-shows.
+	 *
+	 * @param categories: categories
+	 * @param tvShowId: tv-show's id
+	 * @return the response entity
+	 */
 	@PostMapping("/netflix/tv-shows/addCategories/{series-id}")
-	public ResponseEntity<Object> addCategories(@RequestBody Set<Category> categories, @PathVariable(value = "series-id") Long seriesId) {
+	public ResponseEntity<Object> addCategories(@RequestBody Set<Category> categories, @PathVariable(value = "series-id") Long tvShowId) {
 		ResponseEntity<Object> result;
 		try {
-			final TvShow tvShow = tvShowService.findById(seriesId);
+			final TvShow tvShow = tvShowService.findById(tvShowId);
 			if (tvShow != null) {
 				tvShow.getCategories().addAll(categories);
 				result = ResponseEntity.status(HttpStatus.OK).body(tvShowService.updateTvShow(tvShow));
 			} else {
 				final StringBuilder msj = new StringBuilder();
 				msj.append("La serie con id ");
-				msj.append(seriesId);
+				msj.append(tvShowId);
 				msj.append(" no está registrada en BD");
 				result = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msj.toString());
 			}

@@ -50,8 +50,8 @@ public class TvShowServiceImpl implements TvShowServiceI {
 	 * @return the tv shows by category in
 	 */
 	@Override
-	public List<TvShowRestModel> getTvShowsByCategoryIn(final List<Category> categories) {
-		return tvShowRepository.findByCategoriesIn(categories).stream()
+	public List<TvShowRestModel> getTvShowsByCategoriesIn(final List<Category> categories) {
+		return tvShowRepository.findDistinctByCategoriesIn(categories).stream()
 				.map(tvShow -> modelMapper.map(tvShow, TvShowRestModel.class))
 				.collect(Collectors.toList());
 	}

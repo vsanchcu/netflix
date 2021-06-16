@@ -26,6 +26,6 @@ public interface TvShowRepository extends JpaRepository<TvShow, Long> {
 	 * @param categories the categories
 	 * @return the list
 	 */
-	List<TvShow> findByCategoriesIn(final List<Category> categories);
+	List<TvShow> findDistinctByCategoriesIn(final List<Category> categories);
 
 }

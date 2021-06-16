@@ -28,31 +28,31 @@ public class SeasonController {
 	private SeasonServiceI seasonService;
 	
 	/**
-	 * Gets the seasons by tv show.
+	 * Gets the seasons by tv-show.
 	 *
-	 * @param seasonId the season id
-	 * @return the seasons by tv show
+	 * @param tvShowId: tv-show's id
+	 * @return the seasons by tv-show
 	 */
 	@GetMapping("/netflix/series/{series-id}/seasons")
-	List<SeasonRestModel> getSeasonsByTvShow(@PathVariable(value = "series-id") Long seasonId) {
+	List<SeasonRestModel> getSeasonsByTvShow(@PathVariable(value = "series-id") Long tvShowId) {
 		final TvShow tvShow = new TvShow();
-		tvShow.setId(seasonId);
+		tvShow.setId(tvShowId);
 		return seasonService.getSeasonsByTvShow(tvShow);
 	}
 	
 	/**
-	 * Gets the season by tv show and number.
+	 * Gets the season by tv-show and number.
 	 *
-	 * @param seasonId the season id
-	 * @param number the number
-	 * @return the season by tv show and number
+	 * @param tvShowId: tv-show's id
+	 * @param number: season's number
+	 * @return the season by tv-show and number
 	 */
 	@GetMapping("/netflix/series/{series-id}/seasons/{season-number}")
 	SeasonRestModel getSeasonByTvShowAndNumber(
-			@PathVariable(value = "series-id") Long seasonId,
+			@PathVariable(value = "series-id") Long tvShowId,
 			@PathVariable(value = "season-number") int number) {
 		final TvShow tvShow = new TvShow();
-		tvShow.setId(seasonId);
+		tvShow.setId(tvShowId);
 		return seasonService.getSeasonByTvShowAndNumber(tvShow, number);
 	}
 
