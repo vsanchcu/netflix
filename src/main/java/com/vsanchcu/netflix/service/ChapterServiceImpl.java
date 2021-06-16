@@ -74,12 +74,26 @@ public class ChapterServiceImpl implements ChapterServiceI {
 				.orElse(null);
 	}
 
+	/**
+	 * Find by tv show and season and number.
+	 *
+	 * @param tvShow the tv show
+	 * @param season the season
+	 * @param number the number
+	 * @return the chapter
+	 */
 	@Override
 	public Chapter findByTvShowAndSeasonAndNumber(TvShow tvShow, Season season, int number) {
 		return chapterRepository.findByTvShowIdAndSeasonNumberAndNumber(
 				tvShow.getId(), season.getNumber(), number).orElse(null);
 	}
 
+	/**
+	 * Update chapter.
+	 *
+	 * @param chapter the chapter
+	 * @return the chapter rest model
+	 */
 	@Override
 	public ChapterRestModel updateChapter(Chapter chapter) {
 		return modelMapper.map(chapterRepository.save(chapter), ChapterRestModel.class);

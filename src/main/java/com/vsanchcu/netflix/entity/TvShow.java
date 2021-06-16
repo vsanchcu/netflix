@@ -7,7 +7,7 @@
 package com.vsanchcu.netflix.entity;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -75,5 +75,11 @@ public class TvShow implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tvShow", 
 			cascade = CascadeType.REMOVE)
 	private List<Season> seasons;
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "ACTOR_TVSHOWS",
+			joinColumns = @JoinColumn(name = "TV_SHOW_ID"),
+			inverseJoinColumns = @JoinColumn(name = "ACTOR_ID"))
+	private Set<Actor> actors;
 
 }
