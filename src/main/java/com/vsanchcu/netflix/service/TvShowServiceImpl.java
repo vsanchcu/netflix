@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
@@ -77,17 +78,23 @@ public class TvShowServiceImpl implements TvShowServiceI {
 	}
 
 	/**
-	 * Update tv-show.
+	 * Update tv-show's categories.
 	 *
-	 * @param tvShow: the tv-show
+	 * @param tvShowId: tv-show's id
+	 * @param categoriesId: list of category's id
 	 * @return the updated tv-show
-	 * @throws 	NetflixNotFoundException Category doesn't exist
+	 * @throws 	NetflixNotFoundException Tv-show or category doesn't exist
 	 * 			NetflixException Error
 	 */
 	@Override
-	public TvShowRestModel updateTvShow(final TvShow tvShow) 
+	public TvShowRestModel updateTvShowCategories(final Long tvShowId, final List<Long> categoriesId) 
 			throws NetflixException {
 		try {
+			final TvShow tvShow = tvShowRepository.findById(tvShowId)
+					.orElseThrow(() -> new NetflixNotFoundException(ConstException.MSG_NON_EXIST_TV_SHOW));
+			tvShow.getCategories().addAll(categoriesId.stream()
+					.map(category -> new Category(category))
+					.collect(Collectors.toSet()));
 			return modelMapper.map(tvShowRepository.save(tvShow), TvShowRestModel.class);
 		} catch (JpaObjectRetrievalFailureException e) { 
 			throw new NetflixNotFoundException(ConstException.MSG_NON_EXIST_CATEGORY);
@@ -97,26 +104,43 @@ public class TvShowServiceImpl implements TvShowServiceI {
 	}
 
 	/**
-	 * Find tv-show by id.
+	 * Update tv-show's name.
 	 *
-	 * @param id: tv-show's id
-	 * @return the tv-show
-	 * @throws NetflixNotFoundException Tv-show doesn't exist
+	 * @param tvShowId: tv-show's id
+	 * @param name: name
+	 * @return the updated tv-show
+	 * @throws 	NetflixNotFoundException Tv-show doesn't exist
+	 * 			NetflixException Error
 	 */
 	@Override
-	public TvShow findById(final Long id) throws NetflixNotFoundException {
-		return tvShowRepository.findById(id)
-				.orElseThrow(() -> new NetflixNotFoundException(ConstException.MSG_NON_EXIST_TV_SHOW));
+	public TvShowRestModel updateTvShowName(final Long tvShowId, final String name) 
+			throws NetflixException {
+		try {
+			final TvShow tvShow = tvShowRepository.findById(tvShowId)
+					.orElseThrow(() -> new NetflixNotFoundException(ConstException.MSG_NON_EXIST_TV_SHOW));
+			tvShow.setName(name);
+			return modelMapper.map(tvShowRepository.save(tvShow), TvShowRestModel.class);
+		} catch (Exception e) {
+			throw new NetflixException(HttpStatus.INTERNAL_SERVER_ERROR.value(), ConstException.ERROR);
+		}
 	}
 
 	/**
 	 * Delete tv-show.
 	 *
 	 * @param id: tv-show's id
+	 * @throws 	NetflixNotFoundException Tv-show doesn't exist
+	 * 			NetflixException Error
 	 */
 	@Override
-	public void deleteTvShow(final Long id) {
-		tvShowRepository.deleteById(id);
+	public void deleteTvShow(final Long id) throws NetflixException {
+		try {
+			tvShowRepository.deleteById(id);
+		} catch (EmptyResultDataAccessException e) {
+			throw new NetflixNotFoundException(ConstException.MSG_NON_EXIST_TV_SHOW);
+		} catch (Exception e) {
+			throw new NetflixException(HttpStatus.INTERNAL_SERVER_ERROR.value(), ConstException.ERROR);
+		}
 	}
 
 }
