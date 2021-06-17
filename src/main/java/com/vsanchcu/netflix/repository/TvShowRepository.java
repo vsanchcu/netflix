@@ -21,10 +21,10 @@ import com.vsanchcu.netflix.entity.TvShow;
 public interface TvShowRepository extends JpaRepository<TvShow, Long> {
 
 	/**
-	 * Find by categories in.
+	 * Find distinct by categories in.
 	 *
-	 * @param categories the categories
-	 * @return the list
+	 * @param categories: categories
+	 * @return the tv-shows
 	 */
 	List<TvShow> findDistinctByCategoriesIn(final List<Category> categories);
 

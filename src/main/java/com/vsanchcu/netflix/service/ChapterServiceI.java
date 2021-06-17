@@ -9,8 +9,8 @@ package com.vsanchcu.netflix.service;
 import java.util.List;
 
 import com.vsanchcu.netflix.entity.Chapter;
-import com.vsanchcu.netflix.entity.Season;
-import com.vsanchcu.netflix.entity.TvShow;
+import com.vsanchcu.netflix.exception.NetflixException;
+import com.vsanchcu.netflix.exception.NetflixNotFoundException;
 import com.vsanchcu.netflix.model.ChapterRestModel;
 
 /**
@@ -18,9 +18,9 @@ import com.vsanchcu.netflix.model.ChapterRestModel;
  */
 public interface ChapterServiceI {
 
-	List<ChapterRestModel> getChaptersByTvShowsAndSeason(final TvShow tvShow, final Season season);
-	ChapterRestModel getChapterByTvShowAndSeasonAndNumber(final TvShow tvShow, final Season season, final int number);
-	Chapter findByTvShowAndSeasonAndNumber(final TvShow tvShow, final Season season, final int number);
-	ChapterRestModel updateChapter(final Chapter chapter);
+	List<ChapterRestModel> getChaptersByTvShowIdAndSeasonNumber(final Long tvShowId, final int seasonNumber);
+	ChapterRestModel getChapterByTvShowIdAndSeasonNumberAndChapterNumber(final Long tvShowId, final int seasonNumber, final int chapterNumber) throws NetflixNotFoundException;
+	Chapter findByTvShowIdAndSeasonNumberAndChapterNumber(final Long tvShowId, final int seasonNumber, final int chapterNumber) throws NetflixNotFoundException;
+	ChapterRestModel updateChapterName(final Chapter chapter, final String name) throws NetflixException;
 
 }

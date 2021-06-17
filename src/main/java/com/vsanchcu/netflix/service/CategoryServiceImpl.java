@@ -44,8 +44,8 @@ public class CategoryServiceImpl implements CategoryServiceI {
 	/**
 	 * Gets the category by id.
 	 *
-	 * @param id the id
-	 * @return the category by id
+	 * @param id: category's id
+	 * @return the category or null
 	 */
 	@Override
 	public CategoryRestModel getCategoryById(Long id) {

@@ -15,7 +15,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.vsanchcu.netflix.entity.Chapter;
-import com.vsanchcu.netflix.entity.Season;
 
 /**
  * The Interface ChapterRepository.
@@ -23,29 +22,14 @@ import com.vsanchcu.netflix.entity.Season;
 @Repository
 public interface ChapterRepository extends JpaRepository<Chapter, Long> {
 
-	/**
-	 * Find by season.
-	 *
-	 * @param season the season
-	 * @return the list
-	 */
-	List<Chapter> findBySeason(final Season season);
+	Optional<Chapter> findByIdAndNumber(final Long id, final int number);
 	
 	/**
-	 * Find by season and number.
+	 * Find by tv-show's id and season's number.
 	 *
-	 * @param season the season
-	 * @param number the number
-	 * @return the optional
-	 */
-	Optional<Chapter> findBySeasonAndNumber(final Season season, final int number);
-	
-	/**
-	 * Gets the chapters by tv show id and season number.
-	 *
-	 * @param tvShowId the tv show id
-	 * @param seasonNumber the season number
-	 * @return the chapters by tv show id and season number
+	 * @param tvShowId: tv-show's id
+	 * @param seasonNumber: season's number
+	 * @return the chapters
 	 */
 	@Query(value = "SELECT c.* FROM CHAPTERS c "
 			+ "INNER JOIN SEASONS s ON c.SEASON_ID = s.ID "
@@ -57,12 +41,12 @@ public interface ChapterRepository extends JpaRepository<Chapter, Long> {
 			@Param("seasonNumber") final int seasonNumber);
 	
 	/**
-	 * Gets the chapter by tv show id and season number and number.
+	 * Find by tv-show's id and season's number and chapter's number.
 	 *
-	 * @param tvShowId the tv show id
-	 * @param seasonNumber the season number
-	 * @param number the number
-	 * @return the chapter by tv show id and season number and number
+	 * @param tvShowId: tv-show's id
+	 * @param seasonNumber: season's number
+	 * @param number: chapter's number
+	 * @return the chapter
 	 */
 	@Query(value = "SELECT c.* FROM CHAPTERS c "
 			+ "INNER JOIN SEASONS s ON c.SEASON_ID = s.ID "

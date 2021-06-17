@@ -1,5 +1,5 @@
 /*
- * 
+ * Chapter's RestModel
  * 
  * @author: VSANCHCU
  * @version: 1.0

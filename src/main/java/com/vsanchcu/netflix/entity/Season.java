@@ -1,3 +1,9 @@
+/*
+ * Season's Entity
+ * 
+ * @author: VSANCHCU
+ * @version: 1.0
+ */
 package com.vsanchcu.netflix.entity;
 
 import java.io.Serializable;
@@ -28,9 +34,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Season implements Serializable {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 9129602107139586553L;
 
 	@Id
