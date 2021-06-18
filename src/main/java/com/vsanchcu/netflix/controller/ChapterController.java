@@ -23,6 +23,7 @@ import com.vsanchcu.netflix.service.ChapterServiceI;
 import com.vsanchcu.netflix.util.ConstCommon;
 import com.vsanchcu.netflix.util.ConstRest;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -31,6 +32,7 @@ import io.swagger.annotations.ApiResponses;
 /**
  * The Class ChapterController.
  */
+@Api(tags = "Chaper's Controller")
 @RestController
 @RequestMapping(ConstRest.RES_CHAPTER)
 public class ChapterController {
