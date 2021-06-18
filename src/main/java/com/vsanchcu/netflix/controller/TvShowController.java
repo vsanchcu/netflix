@@ -27,6 +27,11 @@ import com.vsanchcu.netflix.service.TvShowServiceI;
 import com.vsanchcu.netflix.util.ConstCommon;
 import com.vsanchcu.netflix.util.ConstRest;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @RestController
 @RequestMapping(ConstRest.RES_TVS_HOW)
 public class TvShowController {
@@ -40,15 +45,19 @@ public class TvShowController {
 	 * @param categoriesId: categories' id
 	 * @return the tv shows
 	 */
+	@ApiOperation(value = "Consultar todas las series o por categorías")
+	@ApiResponses({@ApiResponse(code = 200, message = "OK. La consulta se ha realizado correctamente.")})
 	@GetMapping()
-	NetflixResponse getTvShows(@RequestParam(required = false) List<Long> categoriesId) {
+	NetflixResponse getTvShows(
+			@ApiParam(name = "categoriesId", type = "List<Long>", value = "List of Category's Id", example = "{1, 2}", required = true) 
+			@RequestParam(required = false) List<Long> categoriesId) {
 		NetflixResponse response;
 		if (categoriesId != null) {
 			final List<Category> categories = categoriesId.stream().map(category -> new Category(category)).collect(Collectors.toList());
-			response = new NetflixResponse(HttpStatus.OK, ConstCommon.SUCCESS, ConstCommon.OK, 
+			response = new NetflixResponse(ConstCommon.SUCCESS, HttpStatus.OK.value(), ConstCommon.OK, 
 					tvShowService.getTvShowsByCategoriesIn(categories));
 		} else {
-			response = new NetflixResponse(HttpStatus.OK, ConstCommon.SUCCESS, ConstCommon.OK, 
+			response = new NetflixResponse(ConstCommon.SUCCESS, HttpStatus.OK.value(), ConstCommon.OK, 
 					tvShowService.getTvShows());
 		}
 		return response;
@@ -61,10 +70,15 @@ public class TvShowController {
 	 * @return the tv show
 	 * @throws NetflixNotFoundException Tv-show doesn't exist
 	 */
+	@ApiOperation(value = "Consultar serie")
+	@ApiResponses({@ApiResponse(code = 200, message = "OK. La consulta se ha realizado correctamente."),
+					@ApiResponse(code = 404, message = "La serie no está registrada en BD")})
 	@GetMapping(ConstRest.PATH_VAR_TV_SHOW_ID)
-	NetflixResponse getTvShowById(@PathVariable Long tvShowId) 
+	NetflixResponse getTvShowById(
+			@ApiParam(name = "tvShowId", type = "Long", value = "Tv show's Id", example = "1", required = true) 
+			@PathVariable Long tvShowId) 
 			throws NetflixNotFoundException {
-		return new NetflixResponse(HttpStatus.OK, ConstCommon.SUCCESS, ConstCommon.OK, 
+		return new NetflixResponse(ConstCommon.SUCCESS, HttpStatus.OK.value(), ConstCommon.OK, 
 				tvShowService.getTvShowById(tvShowId));
 	}
 	
@@ -77,11 +91,11 @@ public class TvShowController {
 	 * @throws 	NetflixNotFoundException Tv-Show or category doesn't exist
 	 * 			NetflixException Error
 	 */
-	@PatchMapping(ConstRest.PATH_VAR_TV_SHOW_ID)
+	@PatchMapping(ConstRest.PATH_VAR_TV_SHOW_ID + ConstRest.RES_CATEGORY)
 	NetflixResponse addTvShowCategories(
 			@RequestParam List<Long> categoriesId, @PathVariable Long tvShowId) 
 			throws NetflixException {
-		return new NetflixResponse(HttpStatus.OK, ConstCommon.SUCCESS, ConstCommon.OK, 
+		return new NetflixResponse(ConstCommon.SUCCESS, HttpStatus.OK.value(), ConstCommon.OK, 
 				tvShowService.updateTvShowCategories(tvShowId, categoriesId));
 	}
 	
@@ -97,7 +111,7 @@ public class TvShowController {
 	@PatchMapping(ConstRest.PATH_VAR_TV_SHOW_ID)
 	NetflixResponse updateTvShowName(@RequestParam String name, @PathVariable Long tvShowId) 
 			throws NetflixException {
-		return new NetflixResponse(HttpStatus.OK, ConstCommon.SUCCESS, ConstCommon.OK, 
+		return new NetflixResponse(ConstCommon.SUCCESS, HttpStatus.OK.value(), ConstCommon.OK, 
 				tvShowService.updateTvShowName(tvShowId, name));
 	}
 
@@ -112,7 +126,7 @@ public class TvShowController {
 	@DeleteMapping(ConstRest.PATH_VAR_TV_SHOW_ID)
 	NetflixResponse deleteTvShow(@PathVariable Long tvShowId) throws NetflixException {
 		tvShowService.deleteTvShow(tvShowId);
-		return new NetflixResponse(HttpStatus.OK, ConstCommon.SUCCESS, ConstCommon.OK);
+		return new NetflixResponse(ConstCommon.SUCCESS, HttpStatus.OK.value(), ConstCommon.OK);
 	}
 
 }

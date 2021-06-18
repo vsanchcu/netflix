@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.vsanchcu.netflix.entity.TvShow;
+import com.vsanchcu.netflix.exception.NetflixException;
 import com.vsanchcu.netflix.exception.NetflixNotFoundException;
 import com.vsanchcu.netflix.model.SeasonRestModel;
 import com.vsanchcu.netflix.repository.SeasonRepository;
@@ -55,7 +56,7 @@ public class SeasonServiceImpl implements SeasonServiceI {
 	 */
 	@Override
 	public SeasonRestModel getSeasonByTvShowIdAndNumber(final Long tvShowId, final int number) 
-			throws NetflixNotFoundException {
+			throws NetflixException {
 		return seasonRepository.findByTvShowAndNumber(new TvShow(tvShowId), number)
 				.map(season -> modelMapper.map(season, SeasonRestModel.class))
 				.orElseThrow(() -> new NetflixNotFoundException(ConstException.MSG_NON_EXIST_SEASON));

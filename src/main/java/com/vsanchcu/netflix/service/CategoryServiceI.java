@@ -8,6 +8,7 @@ package com.vsanchcu.netflix.service;
 
 import java.util.List;
 
+import com.vsanchcu.netflix.exception.NetflixException;
 import com.vsanchcu.netflix.model.CategoryRestModel;
 
 /**
@@ -16,6 +17,6 @@ import com.vsanchcu.netflix.model.CategoryRestModel;
 public interface CategoryServiceI {
 
 	List<CategoryRestModel> getCategories();
-	CategoryRestModel getCategoryById(final Long id);
+	CategoryRestModel getCategoryById(final Long id) throws NetflixException;
 
 }

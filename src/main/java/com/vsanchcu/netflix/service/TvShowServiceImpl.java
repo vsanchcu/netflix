@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import com.vsanchcu.netflix.entity.Category;
 import com.vsanchcu.netflix.entity.TvShow;
+import com.vsanchcu.netflix.exception.NetflixErrorException;
 import com.vsanchcu.netflix.exception.NetflixException;
 import com.vsanchcu.netflix.exception.NetflixNotFoundException;
 import com.vsanchcu.netflix.model.TvShowRestModel;
@@ -99,7 +100,7 @@ public class TvShowServiceImpl implements TvShowServiceI {
 		} catch (JpaObjectRetrievalFailureException e) { 
 			throw new NetflixNotFoundException(ConstException.MSG_NON_EXIST_CATEGORY);
 		} catch (Exception e) {
-			throw new NetflixException(HttpStatus.INTERNAL_SERVER_ERROR.value(), ConstException.ERROR);
+			throw new NetflixErrorException(HttpStatus.INTERNAL_SERVER_ERROR, ConstException.ERROR);
 		}
 	}
 
@@ -121,7 +122,7 @@ public class TvShowServiceImpl implements TvShowServiceI {
 			tvShow.setName(name);
 			return modelMapper.map(tvShowRepository.save(tvShow), TvShowRestModel.class);
 		} catch (Exception e) {
-			throw new NetflixException(HttpStatus.INTERNAL_SERVER_ERROR.value(), ConstException.ERROR);
+			throw new NetflixErrorException(HttpStatus.INTERNAL_SERVER_ERROR, ConstException.ERROR);
 		}
 	}
 
@@ -139,7 +140,7 @@ public class TvShowServiceImpl implements TvShowServiceI {
 		} catch (EmptyResultDataAccessException e) {
 			throw new NetflixNotFoundException(ConstException.MSG_NON_EXIST_TV_SHOW);
 		} catch (Exception e) {
-			throw new NetflixException(HttpStatus.INTERNAL_SERVER_ERROR.value(), ConstException.ERROR);
+			throw new NetflixErrorException(HttpStatus.INTERNAL_SERVER_ERROR, ConstException.ERROR);
 		}
 	}
 

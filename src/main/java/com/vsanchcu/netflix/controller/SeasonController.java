@@ -13,11 +13,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vsanchcu.netflix.exception.NetflixException;
 import com.vsanchcu.netflix.exception.NetflixNotFoundException;
 import com.vsanchcu.netflix.response.NetflixResponse;
 import com.vsanchcu.netflix.service.SeasonServiceI;
 import com.vsanchcu.netflix.util.ConstCommon;
 import com.vsanchcu.netflix.util.ConstRest;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 /**
  * The Class SeasonController.
@@ -36,9 +42,13 @@ public class SeasonController {
 	 * @param tvShowId: tv-show id
 	 * @return the seasons
 	 */
+	@ApiOperation(value = "Consultar todas las temporadas de una serie")
+	@ApiResponses({@ApiResponse(code = 200, message = "OK. La consulta se ha realizado correctamente.")})
 	@GetMapping()
-	NetflixResponse getSeasonsByTvShowId(@PathVariable Long tvShowId) {
-		return new NetflixResponse(HttpStatus.OK, ConstCommon.SUCCESS, ConstCommon.OK, 
+	NetflixResponse getSeasonsByTvShowId(
+			@ApiParam(name = "tvShowId", type = "Long", value = "Tv show's Id", example = "1", required = true) 
+			@PathVariable Long tvShowId) {
+		return new NetflixResponse(ConstCommon.SUCCESS, HttpStatus.OK.value(), ConstCommon.OK, 
 				seasonService.getSeasonsByTvShowId(tvShowId));
 	}
 	
@@ -50,11 +60,17 @@ public class SeasonController {
 	 * @return the season
 	 * @throws NetflixNotFoundException Season doesn't exist
 	 */
+	@ApiOperation(value = "Consultar temporada de una serie")
+	@ApiResponses({@ApiResponse(code = 200, message = "OK. La consulta se ha realizado correctamente."), 
+					@ApiResponse(code = 404, message = "La temporada no está registrada en BD")})
 	@GetMapping(ConstRest.PATH_VAR_SEASON_NUM)
 	NetflixResponse getSeasonByTvShowIdAndNumber(
-			@PathVariable Long tvShowId, @PathVariable int seasonNumber) 
-					throws NetflixNotFoundException {
-		return new NetflixResponse(HttpStatus.OK, ConstCommon.SUCCESS, ConstCommon.OK, 
+			@ApiParam(name = "tvShowId", type = "Long", value = "Tv show's Id", example = "1", required = true) 
+			@PathVariable Long tvShowId, 
+			@ApiParam(name = "seasonNumber", type = "int", value = "Season's Number", example = "1", required = true) 
+			@PathVariable int seasonNumber) 
+					throws NetflixException {
+		return new NetflixResponse(ConstCommon.SUCCESS, HttpStatus.OK.value(), ConstCommon.OK, 
 				seasonService.getSeasonByTvShowIdAndNumber(tvShowId, seasonNumber));
 	}
 

@@ -13,10 +13,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vsanchcu.netflix.exception.NetflixException;
+import com.vsanchcu.netflix.exception.NetflixNotFoundException;
 import com.vsanchcu.netflix.response.NetflixResponse;
 import com.vsanchcu.netflix.service.CategoryServiceI;
 import com.vsanchcu.netflix.util.ConstCommon;
 import com.vsanchcu.netflix.util.ConstRest;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 /**
  * The Class CategoryController.
@@ -34,9 +41,11 @@ public class CategoryController {
 	 *
 	 * @return the categories
 	 */
+	@ApiOperation(value = "Consultar todas las categorías")
+	@ApiResponses({@ApiResponse(code = 200, message = "OK. La consulta se ha realizado correctamente.")})
 	@GetMapping
 	public NetflixResponse getCategories() {
-		return new NetflixResponse(HttpStatus.OK, ConstCommon.SUCCESS, ConstCommon.OK, 
+		return new NetflixResponse(ConstCommon.SUCCESS, HttpStatus.OK.value(), ConstCommon.OK, 
 				categoryService.getCategories());
 	}
 	
@@ -45,10 +54,17 @@ public class CategoryController {
 	 *
 	 * @param categoryId: category's id
 	 * @return the category
+	 * @throws NetflixNotFoundException Category doesn't exist
 	 */
+	@ApiOperation(value = "Consultar categoría por Id")
+	@ApiResponses({@ApiResponse(code = 200, message = "OK. La consulta se ha realizado correctamente."), 
+					@ApiResponse(code = 404, message = "La categoría no está registrada en BD")})
 	@GetMapping(ConstRest.PATH_VAR_CATEGORY_ID)
-	public NetflixResponse getCategoryById(@PathVariable Long categoryId) {
-		return new NetflixResponse(HttpStatus.OK, ConstCommon.SUCCESS, ConstCommon.OK, 
+	public NetflixResponse getCategoryById(
+			@ApiParam(name = "categoryId", type = "Long", value = "Category's Id", example = "1", required = true) 
+			@PathVariable Long categoryId) 
+			throws NetflixException {
+		return new NetflixResponse(ConstCommon.SUCCESS, HttpStatus.OK.value(), ConstCommon.OK, 
 				categoryService.getCategoryById(categoryId));
 	}
 

@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.vsanchcu.netflix.entity.Chapter;
+import com.vsanchcu.netflix.exception.NetflixErrorException;
 import com.vsanchcu.netflix.exception.NetflixException;
 import com.vsanchcu.netflix.exception.NetflixNotFoundException;
 import com.vsanchcu.netflix.model.ChapterRestModel;
@@ -100,7 +101,7 @@ public class ChapterServiceImpl implements ChapterServiceI {
 		try {
 			return modelMapper.map(chapterRepository.save(chapter), ChapterRestModel.class);
 		} catch (Exception e) {
-			throw new NetflixException(HttpStatus.INTERNAL_SERVER_ERROR.value(), ConstException.ERROR);
+			throw new NetflixErrorException(HttpStatus.INTERNAL_SERVER_ERROR, ConstException.ERROR);
 		}
 	}
 

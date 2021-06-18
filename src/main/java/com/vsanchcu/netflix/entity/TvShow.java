@@ -7,7 +7,7 @@
 package com.vsanchcu.netflix.entity;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -24,9 +24,12 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
@@ -38,6 +41,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @RequiredArgsConstructor
 public class TvShow implements Serializable {
 
@@ -47,7 +51,8 @@ public class TvShow implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
-	private final Long id;
+	@NonNull
+	private Long id;
 	
 	@Column(name = "NAME")
 	private String name;
@@ -59,6 +64,7 @@ public class TvShow implements Serializable {
 	private String longDesc;
 	
 	@Column(name = "YEAR")
+	@DateTimeFormat(pattern = "yyyy")
 	private Date year;
 	
 	@Column(name = "RECOMMENDED_AGE")

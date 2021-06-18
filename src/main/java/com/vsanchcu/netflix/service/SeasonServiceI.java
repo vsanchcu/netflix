@@ -8,7 +8,7 @@ package com.vsanchcu.netflix.service;
 
 import java.util.List;
 
-import com.vsanchcu.netflix.exception.NetflixNotFoundException;
+import com.vsanchcu.netflix.exception.NetflixException;
 import com.vsanchcu.netflix.model.SeasonRestModel;
 
 /**
@@ -17,6 +17,6 @@ import com.vsanchcu.netflix.model.SeasonRestModel;
 public interface SeasonServiceI {
 
 	List<SeasonRestModel> getSeasonsByTvShowId(final Long tvShowId);
-	SeasonRestModel getSeasonByTvShowIdAndNumber(final Long tvShowId, final int number) throws NetflixNotFoundException;
+	SeasonRestModel getSeasonByTvShowIdAndNumber(final Long tvShowId, final int number) throws NetflixException;
 
 }
