@@ -55,5 +55,8 @@ public class TvShowRestModel implements Serializable {
 	
 //	@JsonProperty(value = "seasons")
 //	private List<SeasonRestModel> seasons;
+	
+	@JsonProperty(value = "actors")
+	private Set<ActorRestModel> actors;
 
 }
