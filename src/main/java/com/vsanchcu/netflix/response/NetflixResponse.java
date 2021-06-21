@@ -2,6 +2,8 @@ package com.vsanchcu.netflix.response;
 
 import java.io.Serializable;
 
+import org.springframework.http.HttpStatus;
+
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +15,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class NetflixResponse implements Serializable {
+public class NetflixResponse<T> implements Serializable {
 
 	private static final long serialVersionUID = 4684359500265141278L;
 
@@ -23,14 +25,14 @@ public class NetflixResponse implements Serializable {
 	
 	@ApiModelProperty(position = 1)
 	@NonNull
-	private int code;
+	private HttpStatus code;
 	
 	@ApiModelProperty(position = 2)
 	@NonNull
 	private String message;
 	
 	@ApiModelProperty(position = 3)
-	private Object data;
+	private T data;
 
 	public String getCode() {
 		return String.valueOf(this.code);

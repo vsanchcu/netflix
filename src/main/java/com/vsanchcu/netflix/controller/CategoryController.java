@@ -6,6 +6,8 @@
  */
 package com.vsanchcu.netflix.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.vsanchcu.netflix.exception.NetflixException;
 import com.vsanchcu.netflix.exception.NetflixNotFoundException;
+import com.vsanchcu.netflix.model.CategoryRestModel;
 import com.vsanchcu.netflix.response.NetflixResponse;
 import com.vsanchcu.netflix.service.CategoryServiceI;
 import com.vsanchcu.netflix.util.ConstCommon;
@@ -46,8 +49,8 @@ public class CategoryController {
 	@ApiOperation(value = "Consultar todas las categorías")
 	@ApiResponses({@ApiResponse(code = 200, message = "OK. La consulta se ha realizado correctamente.")})
 	@GetMapping
-	public NetflixResponse getCategories() {
-		return new NetflixResponse(ConstCommon.SUCCESS, HttpStatus.OK.value(), ConstCommon.OK, 
+	public NetflixResponse<List<CategoryRestModel>> getCategories() {
+		return new NetflixResponse<List<CategoryRestModel>>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK, 
 				categoryService.getCategories());
 	}
 	
@@ -62,11 +65,11 @@ public class CategoryController {
 	@ApiResponses({@ApiResponse(code = 200, message = "OK. La consulta se ha realizado correctamente."), 
 					@ApiResponse(code = 404, message = "La categoría no está registrada en BD")})
 	@GetMapping(ConstRest.PATH_VAR_CATEGORY_ID)
-	public NetflixResponse getCategoryById(
+	public NetflixResponse<CategoryRestModel> getCategoryById(
 			@ApiParam(name = "categoryId", type = "Long", value = "Category's Id", example = "1", required = true) 
 			@PathVariable Long categoryId) 
 			throws NetflixException {
-		return new NetflixResponse(ConstCommon.SUCCESS, HttpStatus.OK.value(), ConstCommon.OK, 
+		return new NetflixResponse<CategoryRestModel>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK, 
 				categoryService.getCategoryById(categoryId));
 	}
 

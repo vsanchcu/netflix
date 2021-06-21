@@ -18,18 +18,18 @@ public class NetflixExceptionHandler {
 	@ExceptionHandler({ Exception.class })
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ResponseBody
-	public NetflixResponse unhandledErrors(HttpServletRequest req, Exception ex) {
-		return new NetflixResponse(ConstException.ERROR, 
-				HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
+	public NetflixResponse<?> unhandledErrors(HttpServletRequest req, Exception ex) {
+		return new NetflixResponse<>(ConstException.ERROR, 
+				HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
 	}
 	
 	@ExceptionHandler({ NetflixException.class })
 	@ResponseBody
-	public NetflixResponse handleLmException(final HttpServletRequest request, 
+	public NetflixResponse<?> handleLmException(final HttpServletRequest request, 
 			final HttpServletResponse response,
 			final NetflixException ex) {
-		response.setStatus(ex.getCode());
-		return new NetflixResponse(ConstException.ERROR, ex.getCode(), ex.getMessage());
+		response.setStatus(ex.getCode().value());
+		return new NetflixResponse<>(ConstException.ERROR, ex.getCode(), ex.getMessage());
 	}
 
 }

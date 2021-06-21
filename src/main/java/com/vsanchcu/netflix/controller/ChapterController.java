@@ -6,6 +6,8 @@
  */
 package com.vsanchcu.netflix.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vsanchcu.netflix.entity.Chapter;
 import com.vsanchcu.netflix.exception.NetflixException;
 import com.vsanchcu.netflix.exception.NetflixNotFoundException;
+import com.vsanchcu.netflix.model.ChapterRestModel;
 import com.vsanchcu.netflix.response.NetflixResponse;
 import com.vsanchcu.netflix.service.ChapterServiceI;
 import com.vsanchcu.netflix.util.ConstCommon;
@@ -51,12 +54,12 @@ public class ChapterController {
 	@ApiOperation(value = "Consultar todos las capítulos de una serie y una temporada")
 	@ApiResponses({@ApiResponse(code = 200, message = "OK. La consulta se ha realizado correctamente.")})
 	@GetMapping
-	public NetflixResponse getChaptersByTvShowIdAndSeasonNumber(
+	public NetflixResponse<List<ChapterRestModel>> getChaptersByTvShowIdAndSeasonNumber(
 			@ApiParam(name = "tvShowId", type = "Long", value = "Tv show's Id", example = "1", required = true) 
 			@PathVariable Long tvShowId, 
 			@ApiParam(name = "seasonNumber", type = "int", value = "Season's Number", example = "1", required = true) 
 			@PathVariable int seasonNumber) {
-		return new NetflixResponse(ConstCommon.SUCCESS, HttpStatus.OK.value(), ConstCommon.OK, 
+		return new NetflixResponse<List<ChapterRestModel>>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK, 
 				chapterService.getChaptersByTvShowIdAndSeasonNumber(tvShowId, seasonNumber));
 	}
 	
@@ -73,7 +76,7 @@ public class ChapterController {
 	@ApiResponses({@ApiResponse(code = 200, message = "OK. La consulta se ha realizado correctamente."), 
 					@ApiResponse(code = 404, message = "El capítulo no está registrado en BD")})
 	@GetMapping(ConstRest.PATH_VAR_CHAPTER_NUM)
-	public NetflixResponse getChapterByTvShowAndSeasonAndNumber(
+	public NetflixResponse<ChapterRestModel> getChapterByTvShowAndSeasonAndNumber(
 			@ApiParam(name = "tvShowId", type = "Long", value = "Tv show's Id", example = "1", required = true) 
 			@PathVariable Long tvShowId, 
 			@ApiParam(name = "seasonNumber", type = "int", value = "Season's Number", example = "1", required = true) 
@@ -81,7 +84,7 @@ public class ChapterController {
 			@ApiParam(name = "chapterNumber", type = "int", value = "Chapter's Number", example = "1", required = true) 
 			@PathVariable int chapterNumber) 
 					throws NetflixNotFoundException {
-		return new NetflixResponse(ConstCommon.SUCCESS, HttpStatus.OK.value(), ConstCommon.OK, 
+		return new NetflixResponse<ChapterRestModel>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK, 
 				chapterService.getChapterByTvShowIdAndSeasonNumberAndChapterNumber(tvShowId, seasonNumber, chapterNumber));
 	}
 	
@@ -101,7 +104,7 @@ public class ChapterController {
 					@ApiResponse(code = 404, message = "El capítulo no está registrado en BD"), 
 					@ApiResponse(code = 500, message = "Error al actualizar")})
 	@PatchMapping(ConstRest.PATH_VAR_CHAPTER_NUM)
-	public NetflixResponse updateName(
+	public NetflixResponse<ChapterRestModel> updateName(
 			@ApiParam(name = "name", type = "String", value = "New Chapter's Name", example = "The name of chapter", required = true) 
 			@RequestParam String name, 
 			@ApiParam(name = "tvShowId", type = "Long", value = "Tv show's Id", example = "1", required = true) 
@@ -113,7 +116,7 @@ public class ChapterController {
 					throws NetflixException {
 		final Chapter chapter = chapterService
 				.findByTvShowIdAndSeasonNumberAndChapterNumber(tvShowId, seasonNumber, chapterNumber);
-		return new NetflixResponse(ConstCommon.SUCCESS, HttpStatus.OK.value(), ConstCommon.OK, 
+		return new NetflixResponse<ChapterRestModel>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK, 
 					chapterService.updateChapterName(chapter, name));
 	}
 
