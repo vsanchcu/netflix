@@ -9,18 +9,32 @@ package com.vsanchcu.netflix.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vsanchcu.netflix.entity.TvShow;
+import com.vsanchcu.netflix.exception.NetflixException;
+import com.vsanchcu.netflix.exception.NetflixNotFoundException;
 import com.vsanchcu.netflix.model.SeasonRestModel;
+import com.vsanchcu.netflix.response.NetflixResponse;
 import com.vsanchcu.netflix.service.SeasonServiceI;
+import com.vsanchcu.netflix.util.ConstCommon;
+import com.vsanchcu.netflix.util.ConstRest;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 /**
  * The Class SeasonController.
  */
+@Api(tags = "Season's Controller")
 @RestController
+@RequestMapping(ConstRest.RES_SEASON)
 public class SeasonController {
 
 	/** The season service. */
@@ -28,32 +42,41 @@ public class SeasonController {
 	private SeasonServiceI seasonService;
 	
 	/**
-	 * Gets the seasons by tv show.
+	 * Gets the seasons by tv-show's id.
 	 *
-	 * @param seasonId the season id
-	 * @return the seasons by tv show
+	 * @param tvShowId: tv-show id
+	 * @return the seasons
 	 */
-	@GetMapping("/netflix/series/{series-id}/seasons")
-	List<SeasonRestModel> getSeasonsByTvShow(@PathVariable(value = "series-id") Long seasonId) {
-		final TvShow tvShow = new TvShow();
-		tvShow.setId(seasonId);
-		return seasonService.getSeasonsByTvShow(tvShow);
+	@ApiOperation(value = "Consultar todas las temporadas de una serie")
+	@ApiResponses({@ApiResponse(code = 200, message = "OK. La consulta se ha realizado correctamente.")})
+	@GetMapping()
+	NetflixResponse<List<SeasonRestModel>> getSeasonsByTvShowId(
+			@ApiParam(name = "tvShowId", type = "Long", value = "Tv show's Id", example = "1", required = true) 
+			@PathVariable Long tvShowId) {
+		return new NetflixResponse<List<SeasonRestModel>>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK, 
+				seasonService.getSeasonsByTvShowId(tvShowId));
 	}
 	
 	/**
-	 * Gets the season by tv show and number.
+	 * Gets the season by tv-show's id and season's number.
 	 *
-	 * @param seasonId the season id
-	 * @param number the number
-	 * @return the season by tv show and number
+	 * @param tvShowId: tv-show's id
+	 * @param seasonNumber: season's number
+	 * @return the season
+	 * @throws NetflixNotFoundException Season doesn't exist
 	 */
-	@GetMapping("/netflix/series/{series-id}/seasons/{season-number}")
-	SeasonRestModel getSeasonByTvShowAndNumber(
-			@PathVariable(value = "series-id") Long seasonId,
-			@PathVariable(value = "season-number") int number) {
-		final TvShow tvShow = new TvShow();
-		tvShow.setId(seasonId);
-		return seasonService.getSeasonByTvShowAndNumber(tvShow, number);
+	@ApiOperation(value = "Consultar temporada de una serie")
+	@ApiResponses({@ApiResponse(code = 200, message = "OK. La consulta se ha realizado correctamente."), 
+					@ApiResponse(code = 404, message = "La temporada no está registrada en BD")})
+	@GetMapping(ConstRest.PATH_VAR_SEASON_NUM)
+	NetflixResponse<SeasonRestModel> getSeasonByTvShowIdAndNumber(
+			@ApiParam(name = "tvShowId", type = "Long", value = "Tv show's Id", example = "1", required = true) 
+			@PathVariable Long tvShowId, 
+			@ApiParam(name = "seasonNumber", type = "int", value = "Season's Number", example = "1", required = true) 
+			@PathVariable int seasonNumber) 
+					throws NetflixException {
+		return new NetflixResponse<SeasonRestModel>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK, 
+				seasonService.getSeasonByTvShowIdAndNumber(tvShowId, seasonNumber));
 	}
 
 }

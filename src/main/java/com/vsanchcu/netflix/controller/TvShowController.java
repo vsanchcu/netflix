@@ -1,105 +1,135 @@
+/*
+ * TvShow's Controller
+ * 
+ * @author: VSANCHCU
+ * @version: 1.0
+ */
 package com.vsanchcu.netflix.controller;
 
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vsanchcu.netflix.entity.Category;
-import com.vsanchcu.netflix.entity.TvShow;
+import com.vsanchcu.netflix.exception.NetflixException;
+import com.vsanchcu.netflix.exception.NetflixNotFoundException;
 import com.vsanchcu.netflix.model.TvShowRestModel;
+import com.vsanchcu.netflix.response.NetflixResponse;
 import com.vsanchcu.netflix.service.TvShowServiceI;
+import com.vsanchcu.netflix.util.ConstCommon;
+import com.vsanchcu.netflix.util.ConstRest;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
+@Api(tags = "Tv Show's Controller")
 @RestController
+@RequestMapping(ConstRest.RES_TVS_HOW)
 public class TvShowController {
 
 	@Autowired
 	private TvShowServiceI tvShowService;
 
-	@GetMapping("/netflix/tv-shows")
-	public List<TvShowRestModel> getTvShowsByCategory(@RequestParam(value = "categories", required = false) Long categoryId) {
-		List<TvShowRestModel> listTvShows;
-		if (categoryId!=null) {
-			final Category category = new Category();
-			category.setId(categoryId);
-			listTvShows = tvShowService.getTvShowsByCategoryIn(List.of(category));
+	/**
+	 * Gets the tv shows (optional: by categories id).
+	 *
+	 * @param categoriesId: categories' id
+	 * @return the tv shows
+	 */
+	@ApiOperation(value = "Consultar todas las series o por categorías")
+	@ApiResponses({@ApiResponse(code = 200, message = "OK. La consulta se ha realizado correctamente.")})
+	@GetMapping()
+	NetflixResponse<List<TvShowRestModel>> getTvShows(
+			@ApiParam(name = "categoriesId", type = "List<Long>", value = "List of Category's Id", example = "{1, 2}", required = true) 
+			@RequestParam(required = false) List<Long> categoriesId) {
+		NetflixResponse<List<TvShowRestModel>> response;
+		if (categoriesId != null) {
+			final List<Category> categories = categoriesId.stream().map(category -> new Category(category)).collect(Collectors.toList());
+			response = new NetflixResponse<List<TvShowRestModel>>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK, 
+					tvShowService.getTvShowsByCategoriesIn(categories));
 		} else {
-			listTvShows = tvShowService.getTvShows();
+			response = new NetflixResponse<List<TvShowRestModel>>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK, 
+					tvShowService.getTvShows());
 		}
-		return listTvShows;
+		return response;
 	}
 	
-	@GetMapping("/netflix/tv-shows/{tv-show-id}")
-	public TvShowRestModel getTvShowsById(@PathVariable(value = "tv-show-id") Long id) {
-		return tvShowService.getTvShowById(id);
+	/**
+	 * Gets the tv-show by id.
+	 *
+	 * @param tvShowId: tv-show's id
+	 * @return the tv show
+	 * @throws NetflixNotFoundException Tv-show doesn't exist
+	 */
+	@ApiOperation(value = "Consultar serie")
+	@ApiResponses({@ApiResponse(code = 200, message = "OK. La consulta se ha realizado correctamente."),
+					@ApiResponse(code = 404, message = "La serie no está registrada en BD")})
+	@GetMapping(ConstRest.PATH_VAR_TV_SHOW_ID)
+	NetflixResponse<TvShowRestModel> getTvShowById(
+			@ApiParam(name = "tvShowId", type = "Long", value = "Tv show's Id", example = "1", required = true) 
+			@PathVariable Long tvShowId) 
+			throws NetflixNotFoundException {
+		return new NetflixResponse<TvShowRestModel>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK, 
+				tvShowService.getTvShowById(tvShowId));
 	}
 	
-	@PostMapping("/netflix/tv-shows/addCategories/{series-id}")
-	public ResponseEntity<Object> addCategories(@RequestBody Set<Category> categories, @PathVariable(value = "series-id") Long seriesId) {
-		ResponseEntity<Object> result;
-		try {
-			final TvShow tvShow = tvShowService.findById(seriesId);
-			if (tvShow != null) {
-				tvShow.getCategories().addAll(categories);
-				result = ResponseEntity.status(HttpStatus.OK).body(tvShowService.updateTvShow(tvShow));
-			} else {
-				final StringBuilder msj = new StringBuilder();
-				msj.append("La serie con id ");
-				msj.append(seriesId);
-				msj.append(" no está registrada en BD");
-				result = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msj.toString());
-			}
-		} catch (JpaObjectRetrievalFailureException e) {
-			final StringBuilder msj = new StringBuilder();
-			msj.append("La categoría con id ");
-			msj.append(e.getMessage().substring(e.getMessage().indexOf("id")+3, e.getMessage().indexOf(';')));
-			msj.append(" no está registrada en BD");
-			result = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msj.toString());
-		}
-		return result;
+	/**
+	 * Adds the categories to tv-show.
+	 *
+	 * @param categoriesId: list of category's id
+	 * @param tvShowId: tv-show's id
+	 * @return the updated tv-show
+	 * @throws 	NetflixNotFoundException Tv-Show or category doesn't exist
+	 * 			NetflixException Error
+	 */
+	@PatchMapping(ConstRest.PATH_VAR_TV_SHOW_ID + ConstRest.RES_CATEGORY)
+	NetflixResponse<TvShowRestModel> addTvShowCategories(
+			@RequestParam List<Long> categoriesId, @PathVariable Long tvShowId) 
+			throws NetflixException {
+		return new NetflixResponse<TvShowRestModel>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK, 
+				tvShowService.updateTvShowCategories(tvShowId, categoriesId));
 	}
 	
-	@PostMapping("/netflix/tv-shows/updateName/{series-id}")
-	public ResponseEntity<Object> updateName(@RequestParam String name, @PathVariable(value = "series-id") Long seriesId) {
-		ResponseEntity<Object> result;
-		final TvShow tvShow = tvShowService.findById(seriesId);
-		if (tvShow != null) {
-			tvShow.setName(name);
-			result = ResponseEntity.status(HttpStatus.OK).body(tvShowService.updateTvShow(tvShow));
-		} else {
-			final StringBuilder msj = new StringBuilder();
-			msj.append("La serie con id ");
-			msj.append(seriesId);
-			msj.append(" no está registrada en BD");
-			result = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msj.toString());
-		}
-		return result;
+	/**
+	 * Update tv-show's name.
+	 *
+	 * @param name: name
+	 * @param tvShowId: tv-show's id
+	 * @return the updated tv-show
+	 * @throws 	NetflixNotFoundException Tv-show doesn't exist
+	 * 			NetflixException Error
+	 */
+	@PatchMapping(ConstRest.PATH_VAR_TV_SHOW_ID)
+	NetflixResponse<TvShowRestModel> updateTvShowName(@RequestParam String name, @PathVariable Long tvShowId) 
+			throws NetflixException {
+		return new NetflixResponse<TvShowRestModel>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK, 
+				tvShowService.updateTvShowName(tvShowId, name));
 	}
 
-	@PostMapping("/netflix/tv-shows/delete/{series-id}")
-	public ResponseEntity<String> delete(@PathVariable(value = "series-id") Long seriesId) {
-		ResponseEntity<String> result;
-		try {
-			tvShowService.deleteTvShow(seriesId);
-			result = ResponseEntity.status(HttpStatus.OK).body("La serie ha sido borrada correctamente");
-		} catch (EmptyResultDataAccessException e) {
-			final StringBuilder msj = new StringBuilder();
-			msj.append("La serie con id ");
-			msj.append(seriesId);
-			msj.append(" no está registrada en BD");
-			result = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msj.toString());
-		}
-		return result;
+	/**
+	 * Delete tv-show.
+	 *
+	 * @param tvShowId: tv-show's id
+	 * @return response
+	 * @throws 	NetflixNotFoundException Tv-show doesn't exist
+	 * 			NetflixException Error
+	 */
+	@DeleteMapping(ConstRest.PATH_VAR_TV_SHOW_ID)
+	NetflixResponse<?> deleteTvShow(@PathVariable Long tvShowId) throws NetflixException {
+		tvShowService.deleteTvShow(tvShowId);
+		return new NetflixResponse<>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK);
 	}
 
 }

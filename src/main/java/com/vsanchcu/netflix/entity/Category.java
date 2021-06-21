@@ -18,11 +18,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -34,6 +34,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class Category implements Serializable {
 
 	/** The Constant serialVersionUID. */
@@ -42,13 +43,13 @@ public class Category implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
+	@NonNull
 	private Long id;
 	
 	@Column(name = "NAME", unique = true)
 	private String name;
 	
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "categories")
-	@JsonIgnore
 	private Set<TvShow> tvShows;
 
 }

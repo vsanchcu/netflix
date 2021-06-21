@@ -11,13 +11,16 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.vsanchcu.netflix.entity.Chapter;
-import com.vsanchcu.netflix.entity.Season;
-import com.vsanchcu.netflix.entity.TvShow;
+import com.vsanchcu.netflix.exception.NetflixErrorException;
+import com.vsanchcu.netflix.exception.NetflixException;
+import com.vsanchcu.netflix.exception.NetflixNotFoundException;
 import com.vsanchcu.netflix.model.ChapterRestModel;
 import com.vsanchcu.netflix.repository.ChapterRepository;
+import com.vsanchcu.netflix.util.ConstException;
 
 /**
  * The Class ChapterServiceImpl.
@@ -29,74 +32,77 @@ public class ChapterServiceImpl implements ChapterServiceI {
 	@Autowired
 	private ChapterRepository chapterRepository;
 	
-	/** The season service. */
-//	@Autowired
-//	private SeasonServiceI seasonService;
-	
 	/** The model mapper. */
 	private ModelMapper modelMapper = new ModelMapper();
 
 	/**
-	 * Gets the chapters by tv shows and season.
+	 * Gets the chapters by tv-show's id and season's number.
 	 *
-	 * @param tvShow the tv show
-	 * @param season the season
-	 * @return the chapters by tv shows and season
+	 * @param tvShowId: tv-show's id
+	 * @param seasonNumber: season's number
+	 * @return the chapters
 	 */
 	@Override
-	public List<ChapterRestModel> getChaptersByTvShowsAndSeason(TvShow tvShow, Season season) {
-//		season = seasonService.findByTvShowAndNumber(tvShow, season.getNumber());
-//		return chapterRepository.findBySeason(season).stream()
-//				.map(chapter -> modelMapper.map(chapter, ChapterRestModel.class))
-//				.collect(Collectors.toList());
-		return chapterRepository.findByTvShowIdAndSeasonNumber(tvShow.getId(), season.getNumber()).stream()
+	public List<ChapterRestModel> getChaptersByTvShowIdAndSeasonNumber(
+			final Long tvShowId, final int seasonNumber) {
+		return chapterRepository.findByTvShowIdAndSeasonNumber(tvShowId, seasonNumber).stream()
 				.map(chapter -> modelMapper.map(chapter, ChapterRestModel.class))
 				.collect(Collectors.toList());
 	}
 
 	/**
-	 * Gets the chapter by tv show and season and number.
+	 * Gets the chapter by tv-show's id and season's number and chapter number.
 	 *
-	 * @param tvShow the tv show
-	 * @param season the season
-	 * @param number the number
-	 * @return the chapter by tv show and season and number
-	 */
-	@Override
-	public ChapterRestModel getChapterByTvShowAndSeasonAndNumber(TvShow tvShow, Season season, int number) {
-//		season = seasonService.findByTvShowAndNumber(tvShow, season.getNumber());
-//		return chapterRepository.findBySeasonAndNumber(season, number)
-//				.map(chapter -> modelMapper.map(chapter, ChapterRestModel.class))
-//				.orElse(null);
-		return chapterRepository.findByTvShowIdAndSeasonNumberAndNumber(
-				tvShow.getId(), season.getNumber(), number)
-				.map(chapter -> modelMapper.map(chapter, ChapterRestModel.class))
-				.orElse(null);
-	}
-
-	/**
-	 * Find by tv show and season and number.
-	 *
-	 * @param tvShow the tv show
-	 * @param season the season
-	 * @param number the number
+	 * @param tvShowId: tv-show's id
+	 * @param seasonNumber: season's number
+	 * @param chapterNumber: chapter's number
 	 * @return the chapter
+	 * @throws NetflixNotFoundException Chapter doesn't exist
 	 */
 	@Override
-	public Chapter findByTvShowAndSeasonAndNumber(TvShow tvShow, Season season, int number) {
-		return chapterRepository.findByTvShowIdAndSeasonNumberAndNumber(
-				tvShow.getId(), season.getNumber(), number).orElse(null);
+	public ChapterRestModel getChapterByTvShowIdAndSeasonNumberAndChapterNumber(
+			final Long tvShowId, final int seasonNumber, final int chapterNumber) 
+					throws NetflixNotFoundException {
+		return chapterRepository.findByTvShowIdAndSeasonNumberAndNumber(tvShowId, seasonNumber, chapterNumber)
+				.map(chapter -> modelMapper.map(chapter, ChapterRestModel.class))
+				.orElseThrow(() -> new NetflixNotFoundException(ConstException.MSG_NON_EXIST_CHAPTER));
 	}
 
 	/**
-	 * Update chapter.
+	 * Find by tv-show's id and season's number and chapter's number.
 	 *
-	 * @param chapter the chapter
-	 * @return the chapter rest model
+	 * @param tvShowId: tv-show's id
+	 * @param seasonNumber: season's number
+	 * @param chapterNumber: chapter's number
+	 * @return the chapter
+	 * @throws NetflixNotFoundException Chapter doesn't exist
 	 */
 	@Override
-	public ChapterRestModel updateChapter(Chapter chapter) {
-		return modelMapper.map(chapterRepository.save(chapter), ChapterRestModel.class);
+	public Chapter findByTvShowIdAndSeasonNumberAndChapterNumber(
+			final Long tvShowId, final int seasonNumber, final int chapterNumber) 
+					throws NetflixNotFoundException {
+		return chapterRepository.findByTvShowIdAndSeasonNumberAndNumber(
+				tvShowId, seasonNumber, chapterNumber)
+				.orElseThrow(() -> new NetflixNotFoundException(ConstException.MSG_NON_EXIST_CHAPTER));
+	}
+
+	/**
+	 * Update chapter name.
+	 *
+	 * @param chapter: the chapter
+	 * @param name: the name
+	 * @return the updated chapter
+	 * @throws NetflixException
+	 */
+	@Override
+	public ChapterRestModel updateChapterName(final Chapter chapter, final String name) 
+			throws NetflixException {
+		chapter.setName(name);
+		try {
+			return modelMapper.map(chapterRepository.save(chapter), ChapterRestModel.class);
+		} catch (Exception e) {
+			throw new NetflixErrorException(HttpStatus.INTERNAL_SERVER_ERROR, ConstException.ERROR);
+		}
 	}
 
 }

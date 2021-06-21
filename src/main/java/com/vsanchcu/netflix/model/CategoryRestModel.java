@@ -32,7 +32,6 @@ public class CategoryRestModel implements Serializable {
 	private String name;
 	
 //	@JsonProperty(value = "tv-shows")
-//	@JsonManagedReference
 //	private Set<TvShowRestModel> tvShows;
 
 }

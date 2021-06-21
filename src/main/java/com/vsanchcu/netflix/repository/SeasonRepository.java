@@ -22,19 +22,19 @@ import com.vsanchcu.netflix.entity.TvShow;
 public interface SeasonRepository extends JpaRepository<Season, Long> {
 
 	/**
-	 * Find by tv show.
+	 * Find by tv-show.
 	 *
-	 * @param tvShow the tv show
-	 * @return the list
+	 * @param tvShow: tv-show
+	 * @return the seasons
 	 */
 	List<Season> findByTvShow(final TvShow tvShow);
 	
 	/**
-	 * Find by tv show and number.
+	 * Find by tv-show and season's number.
 	 *
-	 * @param tvShow the tv show
-	 * @param number the number
-	 * @return the optional
+	 * @param tvShow: tv show
+	 * @param number: season's number
+	 * @return the season
 	 */
 	Optional<Season> findByTvShowAndNumber(final TvShow tvShow, final int number);
 

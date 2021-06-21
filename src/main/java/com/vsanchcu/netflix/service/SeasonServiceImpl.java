@@ -13,10 +13,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.vsanchcu.netflix.entity.Season;
 import com.vsanchcu.netflix.entity.TvShow;
+import com.vsanchcu.netflix.exception.NetflixException;
+import com.vsanchcu.netflix.exception.NetflixNotFoundException;
 import com.vsanchcu.netflix.model.SeasonRestModel;
 import com.vsanchcu.netflix.repository.SeasonRepository;
+import com.vsanchcu.netflix.util.ConstException;
 
 /**
  * The Class SeasonServiceImpl.
@@ -32,42 +34,32 @@ public class SeasonServiceImpl implements SeasonServiceI {
 	private ModelMapper modelMapper = new ModelMapper();
 
 	/**
-	 * Gets the seasons by tv show.
+	 * Gets the seasons by tv-show's id.
 	 *
-	 * @param tvShow the tv show
-	 * @return the seasons by tv show
+	 * @param tvShowId: tv-show's id
+	 * @return the seasons
 	 */
 	@Override
-	public List<SeasonRestModel> getSeasonsByTvShow(final TvShow tvShow) {
-		return seasonRepository.findByTvShow(tvShow).stream()
+	public List<SeasonRestModel> getSeasonsByTvShowId(final Long tvShowId) {
+		return seasonRepository.findByTvShow(new TvShow(tvShowId)).stream()
 				.map(season -> modelMapper.map(season, SeasonRestModel.class))
 				.collect(Collectors.toList());
 	}
 
 	/**
-	 * Gets the season by tv show and number.
+	 * Gets the season by tv-show's id and number.
 	 *
-	 * @param tvShow the tv show
-	 * @param number the number
-	 * @return the season by tv show and number
-	 */
-	@Override
-	public SeasonRestModel getSeasonByTvShowAndNumber(final TvShow tvShow, final int number) {
-		return seasonRepository.findByTvShowAndNumber(tvShow, number)
-				.map(season -> modelMapper.map(season, SeasonRestModel.class))
-				.orElse(null);
-	}
-
-	/**
-	 * Find by tv show and number.
-	 *
-	 * @param tvShow the tv show
-	 * @param number the number
+	 * @param tvShowId: tv-show's id
+	 * @param number: number
 	 * @return the season
+	 * @throws NetflixNotFoundException Season doesn't exist
 	 */
 	@Override
-	public Season findByTvShowAndNumber(TvShow tvShow, int number) {
-		return seasonRepository.findByTvShowAndNumber(tvShow, number).orElse(null);
+	public SeasonRestModel getSeasonByTvShowIdAndNumber(final Long tvShowId, final int number) 
+			throws NetflixException {
+		return seasonRepository.findByTvShowAndNumber(new TvShow(tvShowId), number)
+				.map(season -> modelMapper.map(season, SeasonRestModel.class))
+				.orElseThrow(() -> new NetflixNotFoundException(ConstException.MSG_NON_EXIST_SEASON));
 	}
 
 }

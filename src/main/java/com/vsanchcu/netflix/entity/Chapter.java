@@ -1,3 +1,9 @@
+/*
+ * Chapter's Entity
+ * 
+ * @author: VSANCHCU
+ * @version: 1.0
+ */
 package com.vsanchcu.netflix.entity;
 
 import java.io.Serializable;
@@ -25,9 +31,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Chapter implements Serializable {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 9204769977123137747L;
 
 	@Id

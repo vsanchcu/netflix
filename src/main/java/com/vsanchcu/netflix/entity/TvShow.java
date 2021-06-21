@@ -24,9 +24,13 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -38,6 +42,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class TvShow implements Serializable {
 
 	/** The Constant serialVersionUID. */
@@ -46,6 +51,7 @@ public class TvShow implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
+	@NonNull
 	private Long id;
 	
 	@Column(name = "NAME")
@@ -58,6 +64,7 @@ public class TvShow implements Serializable {
 	private String longDesc;
 	
 	@Column(name = "YEAR")
+	@DateTimeFormat(pattern = "yyyy")
 	private Date year;
 	
 	@Column(name = "RECOMMENDED_AGE")
