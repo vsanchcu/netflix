@@ -144,4 +144,9 @@ public class TvShowServiceImpl implements TvShowServiceI {
 		}
 	}
 
+	@Override
+	public List<TvShow> getTvShowsByActor(Long actorId) {
+		return tvShowRepository.findByActorsId(actorId);
+	}
+
 }

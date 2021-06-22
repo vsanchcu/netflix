@@ -1,5 +1,5 @@
 /*
- * TvShow's RestModel
+ * TvShowChapter's RestModel
  * 
  * @author: VSANCHCU
  * @version: 1.0
@@ -8,24 +8,26 @@ package com.vsanchcu.netflix.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vsanchcu.netflix.entity.Chapter;
 
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * The Class TvShowRestModel.
+ * The Class TvShowChapterRestModel.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Setter
-public class TvShowRestModel implements Serializable {
+public class TvShowChapterRestModel implements Serializable {
 
 	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = -1231703172030719737L;
+	private static final long serialVersionUID = 955176705887986387L;
 
 	@JsonProperty(value = "id")
 	private Long id;
@@ -48,5 +50,8 @@ public class TvShowRestModel implements Serializable {
 	
 	@JsonProperty(value = "advertising")
 	private String advertising;
+	
+	@JsonProperty(value = "chapters")
+	private List<Chapter> chapters;
 
 }

@@ -28,4 +28,12 @@ public interface TvShowRepository extends JpaRepository<TvShow, Long> {
 	 */
 	List<TvShow> findDistinctByCategoriesIn(final List<Category> categories);
 
+	/**
+	 * Find by actors.
+	 *
+	 * @param actorId: actor's id
+	 * @return the tv-shows
+	 */
+	List<TvShow> findByActorsId(final Long actorId);
+
 }

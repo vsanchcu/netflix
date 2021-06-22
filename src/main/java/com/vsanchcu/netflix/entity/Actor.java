@@ -18,8 +18,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,11 +44,9 @@ public class Actor implements Serializable {
 	private Long id;
 	
 	@Column(name = "NAME")
-	@NotBlank
 	private String name;
 	
 	@Column(name = "BIRTHDAY")
-	@NotNull
 	private Date birthday;
 	
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "actors")

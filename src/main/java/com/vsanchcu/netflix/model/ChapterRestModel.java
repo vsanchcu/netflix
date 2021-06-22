@@ -8,10 +8,8 @@ package com.vsanchcu.netflix.model;
 
 import java.io.Serializable;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vsanchcu.netflix.entity.Season;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -38,9 +36,5 @@ public class ChapterRestModel implements Serializable {
 	
 	@JsonProperty(value = "duration")
 	private int duration;
-	
-	@JsonProperty(value = "season")
-	@JsonBackReference
-	private Season season;
 
 }

@@ -8,7 +8,6 @@ package com.vsanchcu.netflix.model;
 
 import java.io.Serializable;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -34,13 +33,5 @@ public class SeasonRestModel implements Serializable {
 	
 	@JsonProperty(value = "name")
 	private String name;
-	
-	@JsonProperty(value = "tv-show")
-	@JsonBackReference
-	private TvShowRestModel tvShow;
-	
-//	@JsonProperty(value = "chapters")
-//	@JsonManagedReference
-//	private List<ChapterRestModel> chapters;
 
 }

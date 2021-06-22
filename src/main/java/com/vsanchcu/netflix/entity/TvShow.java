@@ -84,7 +84,7 @@ public class TvShow implements Serializable {
 	private List<Season> seasons;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "ACTOR_TVSHOWS",
+	@JoinTable(name = "TVSHOWS_ACTORS",
 			joinColumns = @JoinColumn(name = "TV_SHOW_ID"),
 			inverseJoinColumns = @JoinColumn(name = "ACTOR_ID"))
 	private Set<Actor> actors;

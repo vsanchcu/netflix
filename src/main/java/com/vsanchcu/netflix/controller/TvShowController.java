@@ -52,7 +52,7 @@ public class TvShowController {
 	@ApiResponses({@ApiResponse(code = 200, message = "OK. La consulta se ha realizado correctamente.")})
 	@GetMapping()
 	NetflixResponse<List<TvShowRestModel>> getTvShows(
-			@ApiParam(name = "categoriesId", type = "List<Long>", value = "List of Category's Id", example = "{1, 2}", required = true) 
+			@ApiParam(name = "categoriesId", type = "List<Long>", value = "List of Category's Id", example = "{1, 2}", required = false) 
 			@RequestParam(required = false) List<Long> categoriesId) {
 		NetflixResponse<List<TvShowRestModel>> response;
 		if (categoriesId != null) {

@@ -34,8 +34,5 @@ public class ActorRestModel implements Serializable {
 	
 	@JsonProperty(value = "birthday")
 	private Date birthday;
-	
-//	@JsonProperty(value = "tvShows")
-//	private Set<TvShowRestModel> tvShows;
 
 }
