@@ -7,6 +7,7 @@
 package com.vsanchcu.netflix.service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -16,11 +17,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
+import com.vsanchcu.netflix.entity.Award;
 import com.vsanchcu.netflix.entity.Category;
 import com.vsanchcu.netflix.entity.TvShow;
+import com.vsanchcu.netflix.entity.TvShowAward;
 import com.vsanchcu.netflix.exception.NetflixErrorException;
 import com.vsanchcu.netflix.exception.NetflixException;
 import com.vsanchcu.netflix.exception.NetflixNotFoundException;
+import com.vsanchcu.netflix.model.AwardRestModel;
+import com.vsanchcu.netflix.model.TvShowAwardRestModel;
 import com.vsanchcu.netflix.model.TvShowRestModel;
 import com.vsanchcu.netflix.repository.TvShowRepository;
 import com.vsanchcu.netflix.util.ConstException;
@@ -34,6 +39,10 @@ public class TvShowServiceImpl implements TvShowServiceI {
 	/** The tv show repository. */
 	@Autowired
 	private TvShowRepository tvShowRepository;
+	
+	/** The award service. */
+	@Autowired
+	private TvShowAwardServiceI tvShowAwardService;
 	
 	/** The model mapper. */
 	private ModelMapper modelMapper = new ModelMapper();
@@ -144,9 +153,23 @@ public class TvShowServiceImpl implements TvShowServiceI {
 		}
 	}
 
+	/**
+	 * Gets the tv-shows by actor.
+	 *
+	 * @param actorId: actor's id
+	 * @return the tv-shows
+	 */
 	@Override
 	public List<TvShow> getTvShowsByActor(Long actorId) {
 		return tvShowRepository.findByActorsId(actorId);
+	}
+
+	@Override
+	public List<TvShowAwardRestModel> getAwardsByTvShow(final Long tvShowId) {
+		List<TvShowAward> temp = tvShowAwardService.getAwardsByTvShowId(tvShowId);
+		return tvShowAwardService.getAwardsByTvShowId(tvShowId).stream()
+				.map(award -> modelMapper.map(award, TvShowAwardRestModel.class))
+				.collect(Collectors.toList());
 	}
 
 }

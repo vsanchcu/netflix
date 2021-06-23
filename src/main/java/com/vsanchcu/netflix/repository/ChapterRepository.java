@@ -59,4 +59,12 @@ public interface ChapterRepository extends JpaRepository<Chapter, Long> {
 			@Param("seasonNumber") final int seasonNumber, 
 			@Param("number") final int number);
 
+	/**
+	 * Find by actors.
+	 *
+	 * @param actorId: actor's id
+	 * @return the chapters
+	 */
+	List<Chapter> findBySeasonTvShowActorsId(final Long actorId);
+
 }

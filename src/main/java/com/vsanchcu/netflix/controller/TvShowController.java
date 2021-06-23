@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vsanchcu.netflix.entity.Category;
 import com.vsanchcu.netflix.exception.NetflixException;
 import com.vsanchcu.netflix.exception.NetflixNotFoundException;
+import com.vsanchcu.netflix.model.TvShowAwardRestModel;
 import com.vsanchcu.netflix.model.TvShowRestModel;
 import com.vsanchcu.netflix.response.NetflixResponse;
 import com.vsanchcu.netflix.service.TvShowServiceI;
@@ -34,11 +35,15 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+/**
+ * The Class TvShowController.
+ */
 @Api(tags = "Tv Show's Controller")
 @RestController
 @RequestMapping(ConstRest.RES_TVS_HOW)
 public class TvShowController {
 
+	/** The tv show service. */
 	@Autowired
 	private TvShowServiceI tvShowService;
 
@@ -78,9 +83,9 @@ public class TvShowController {
 					@ApiResponse(code = 404, message = "La serie no está registrada en BD")})
 	@GetMapping(ConstRest.PATH_VAR_TV_SHOW_ID)
 	NetflixResponse<TvShowRestModel> getTvShowById(
-			@ApiParam(name = "tvShowId", type = "Long", value = "Tv show's Id", example = "1", required = true) 
+			@ApiParam(name = "tvShowId", type = "Long", value = "Tv-show's Id", example = "1", required = true) 
 			@PathVariable Long tvShowId) 
-			throws NetflixNotFoundException {
+					throws NetflixNotFoundException {
 		return new NetflixResponse<TvShowRestModel>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK, 
 				tvShowService.getTvShowById(tvShowId));
 	}
@@ -92,12 +97,19 @@ public class TvShowController {
 	 * @param tvShowId: tv-show's id
 	 * @return the updated tv-show
 	 * @throws 	NetflixNotFoundException Tv-Show or category doesn't exist
-	 * 			NetflixException Error
+	 * 			NetflixErrorException Error
 	 */
+	@ApiOperation(value = "Añadir categorías a una serie")
+	@ApiResponses({@ApiResponse(code = 200, message = "OK. La serie ha sido actualizada."), 
+					@ApiResponse(code = 404, message = "La serie no está registrada en BD."), 
+					@ApiResponse(code = 500, message = "Error al actualizar.")})
 	@PatchMapping(ConstRest.PATH_VAR_TV_SHOW_ID + ConstRest.RES_CATEGORY)
 	NetflixResponse<TvShowRestModel> addTvShowCategories(
-			@RequestParam List<Long> categoriesId, @PathVariable Long tvShowId) 
-			throws NetflixException {
+			@ApiParam(name = "categoriesId", type = "List<Long>", value = "List of Category's Id", example = "{1, 2}", required = true) 
+			@RequestParam List<Long> categoriesId, 
+			@ApiParam(name = "tvShowId", type = "Long", value = "Tv-show's Id", example = "1", required = true) 
+			@PathVariable Long tvShowId) 
+					throws NetflixException {
 		return new NetflixResponse<TvShowRestModel>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK, 
 				tvShowService.updateTvShowCategories(tvShowId, categoriesId));
 	}
@@ -109,11 +121,19 @@ public class TvShowController {
 	 * @param tvShowId: tv-show's id
 	 * @return the updated tv-show
 	 * @throws 	NetflixNotFoundException Tv-show doesn't exist
-	 * 			NetflixException Error
+	 * 			NetflixErrorException Error
 	 */
+	@ApiOperation(value = "Actualizar nombre de una serie")
+	@ApiResponses({@ApiResponse(code = 200, message = "OK. La serie se ha actualizado correctamente."), 
+					@ApiResponse(code = 404, message = "La serie no está registrada en BD."), 
+					@ApiResponse(code = 500, message = "Error al actualizar")})
 	@PatchMapping(ConstRest.PATH_VAR_TV_SHOW_ID)
-	NetflixResponse<TvShowRestModel> updateTvShowName(@RequestParam String name, @PathVariable Long tvShowId) 
-			throws NetflixException {
+	NetflixResponse<TvShowRestModel> updateTvShowName(
+			@ApiParam(name = "name", type = "String", value = "New Tv-shows's Name", example = "The name of tv-show", required = true) 
+			@RequestParam String name, 
+			@ApiParam(name = "tvShowId", type = "Long", value = "Tv-show's Id", example = "1", required = true) 
+			@PathVariable Long tvShowId) 
+					throws NetflixException {
 		return new NetflixResponse<TvShowRestModel>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK, 
 				tvShowService.updateTvShowName(tvShowId, name));
 	}
@@ -124,12 +144,35 @@ public class TvShowController {
 	 * @param tvShowId: tv-show's id
 	 * @return response
 	 * @throws 	NetflixNotFoundException Tv-show doesn't exist
-	 * 			NetflixException Error
+	 * 			NetflixErrorException Error
 	 */
+	@ApiOperation(value = "Eliminar serie")
+	@ApiResponses({@ApiResponse(code = 200, message = "OK. La serie se ha eliminado correctamente."), 
+					@ApiResponse(code = 404, message = "La serie no está registrada en BD."), 
+					@ApiResponse(code = 500, message = "Error al eliminar")})
 	@DeleteMapping(ConstRest.PATH_VAR_TV_SHOW_ID)
-	NetflixResponse<?> deleteTvShow(@PathVariable Long tvShowId) throws NetflixException {
+	NetflixResponse<?> deleteTvShow(
+			@ApiParam(name = "tvShowId", type = "Long", value = "Tv-show's Id", example = "1", required = true) 
+			@PathVariable Long tvShowId) 
+					throws NetflixException {
 		tvShowService.deleteTvShow(tvShowId);
 		return new NetflixResponse<>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK);
+	}
+	
+	/**
+	 * Gets the awards by tv show id.
+	 *
+	 * @param tvShowId: tv-show's id
+	 * @return the awards
+	 */
+	@ApiOperation(value = "Consultar premios de una serie")
+	@ApiResponses(@ApiResponse(code = 200, message = "OK. La consulta se ha realizado correctamente."))
+	@GetMapping(ConstRest.PATH_VAR_TV_SHOW_ID + ConstRest.RES_AWARD)
+	NetflixResponse<List<TvShowAwardRestModel>> getAwardsByTvShowId(
+			@ApiParam(name = "tvShowId", type = "Long", value = "Tv show's Id", example = "1", required = true) 
+			@PathVariable Long tvShowId) {
+		return new NetflixResponse<List<TvShowAwardRestModel>>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK, 
+				tvShowService.getAwardsByTvShow(tvShowId));
 	}
 
 }

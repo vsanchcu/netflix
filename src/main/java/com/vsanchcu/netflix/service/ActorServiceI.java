@@ -23,6 +23,6 @@ public interface ActorServiceI {
 	ActorRestModel addActor(final Actor actor) throws NetflixException;
 	ActorRestModel updateActor(final Long actorId, final Actor actor) throws NetflixException;
 	void deleteActor(final Long actorId) throws NetflixException;
-	List<TvShowChapterRestModel> getTvShowsAndChaptersByActor(final Long actorId);
+	TvShowChapterRestModel getTvShowsAndChaptersByActor(final Long actorId);
 
 }

@@ -6,27 +6,23 @@
  */
 package com.vsanchcu.netflix.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.vsanchcu.netflix.entity.Actor;
-import com.vsanchcu.netflix.entity.Chapter;
-import com.vsanchcu.netflix.entity.Season;
-import com.vsanchcu.netflix.entity.TvShow;
 import com.vsanchcu.netflix.exception.NetflixErrorException;
 import com.vsanchcu.netflix.exception.NetflixException;
 import com.vsanchcu.netflix.exception.NetflixNotFoundException;
 import com.vsanchcu.netflix.model.ActorRestModel;
 import com.vsanchcu.netflix.model.ChapterRestModel;
 import com.vsanchcu.netflix.model.TvShowChapterRestModel;
+import com.vsanchcu.netflix.model.TvShowRestModel;
 import com.vsanchcu.netflix.repository.ActorRepository;
 import com.vsanchcu.netflix.util.ConstException;
 
@@ -40,8 +36,13 @@ public class ActorServiceImpl implements ActorServiceI {
 	@Autowired
 	private ActorRepository actorRepository;
 	
+	/** The tv show service. */
 	@Autowired
 	private TvShowServiceI tvShowService;
+	
+	/** The chapter service. */
+	@Autowired
+	private ChapterServiceI chapterService;
 
 	/** The model mapper. */
 	private ModelMapper modelMapper = new ModelMapper();
@@ -53,6 +54,13 @@ public class ActorServiceImpl implements ActorServiceI {
 				.collect(Collectors.toList());
 	}
 
+	/**
+	 * Gets the actor by id.
+	 *
+	 * @param id: id
+	 * @return the actor
+	 * @throws NetflixNotFoundException Actor doesn't exist
+	 */
 	@Override
 	public ActorRestModel getActorById(final Long id) 
 			throws NetflixException {
@@ -61,6 +69,13 @@ public class ActorServiceImpl implements ActorServiceI {
 				.orElseThrow(() -> new NetflixNotFoundException(ConstException.MSG_NON_EXIST_ACTOR));
 	}
 
+	/**
+	 * Adds the actor.
+	 *
+	 * @param actor: actor
+	 * @return the actor
+	 * @throws NetflixErrorException Error
+	 */
 	@Override
 	public ActorRestModel addActor(final Actor actor) 
 			throws NetflixException {
@@ -72,6 +87,15 @@ public class ActorServiceImpl implements ActorServiceI {
 		}
 	}
 
+	/**
+	 * Update actor.
+	 *
+	 * @param actorId: actor's id
+	 * @param actor the actor
+	 * @return the actor rest model
+	 * @throws NetflixNotFoundException Actor doesn't exist
+	 * 			NetflixErrorException Error
+	 */
 	@Override
 	public ActorRestModel updateActor(final Long actorId, final Actor actor) 
 			throws NetflixException {
@@ -85,6 +109,13 @@ public class ActorServiceImpl implements ActorServiceI {
 		}
 	}
 
+	/**
+	 * Delete actor.
+	 *
+	 * @param actorId: actor's id
+	 * @throws NetflixNotFoundException Actor doesn't exist
+	 * 			NetflixErrorException Error
+	 */
 	@Override
 	public void deleteActor(final Long actorId) 
 			throws NetflixException {
@@ -97,20 +128,22 @@ public class ActorServiceImpl implements ActorServiceI {
 		}
 	}
 
+	/**
+	 * Gets the tv-shows and chapters by actor.
+	 *
+	 * @param actorId: actor's id
+	 * @return the tv-shows and chapters
+	 */
 	@Override
-	public List<TvShowChapterRestModel> getTvShowsAndChaptersByActor(final Long actorId) {
-		modelMapper.addMappings(new PropertyMap<TvShow, TvShowChapterRestModel>() {
-			protected void configure() {
-				final List<Chapter> chapters = new ArrayList<>();
-				for (Season season : source.getSeasons()) {
-					chapters.addAll(season.getChapters());
-				}
-				map().setChapters(chapters);
-			}
-		});
-		return tvShowService.getTvShowsByActor(actorId).stream()
-				.map(tvShow -> modelMapper.map(tvShow, TvShowChapterRestModel.class))
-				.collect(Collectors.toList());
+	public TvShowChapterRestModel getTvShowsAndChaptersByActor(final Long actorId) {
+		return new TvShowChapterRestModel(
+				tvShowService.getTvShowsByActor(actorId).stream()
+				.map(tvShow -> modelMapper.map(tvShow, TvShowRestModel.class))
+				.collect(Collectors.toList()), 
+				chapterService.getChaptersByActor(actorId).stream()
+				.map(chapter -> modelMapper.map(chapter, ChapterRestModel.class))
+				.collect(Collectors.toList()));
+
 	}
 
 }

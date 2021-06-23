@@ -12,6 +12,7 @@ import com.vsanchcu.netflix.entity.Category;
 import com.vsanchcu.netflix.entity.TvShow;
 import com.vsanchcu.netflix.exception.NetflixException;
 import com.vsanchcu.netflix.exception.NetflixNotFoundException;
+import com.vsanchcu.netflix.model.TvShowAwardRestModel;
 import com.vsanchcu.netflix.model.TvShowRestModel;
 
 /**
@@ -26,5 +27,6 @@ public interface TvShowServiceI {
 	TvShowRestModel updateTvShowName(final Long tvShowId, final String name) throws NetflixException;
 	void deleteTvShow(final Long id) throws NetflixException;
 	List<TvShow> getTvShowsByActor(final Long actorId);
+	List<TvShowAwardRestModel> getAwardsByTvShow(final Long tvShowId);
 
 }

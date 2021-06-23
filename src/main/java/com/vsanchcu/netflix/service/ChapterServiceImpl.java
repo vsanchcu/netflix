@@ -105,4 +105,15 @@ public class ChapterServiceImpl implements ChapterServiceI {
 		}
 	}
 
+	/**
+	 * Gets the chapters by actor.
+	 *
+	 * @param actorId: actor's id
+	 * @return the chapters
+	 */
+	@Override
+	public List<Chapter> getChaptersByActor(final Long actorId) {
+		return chapterRepository.findBySeasonTvShowActorsId(actorId);
+	}
+
 }

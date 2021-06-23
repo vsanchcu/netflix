@@ -88,5 +88,14 @@ public class TvShow implements Serializable {
 			joinColumns = @JoinColumn(name = "TV_SHOW_ID"),
 			inverseJoinColumns = @JoinColumn(name = "ACTOR_ID"))
 	private Set<Actor> actors;
+	
+//	@ManyToMany(fetch = FetchType.LAZY)
+//	@JoinTable(name = "TVSHOWS_AWARDS",
+//			joinColumns = @JoinColumn(name = "TV_SHOW_ID"),
+//			inverseJoinColumns = @JoinColumn(name = "AWARD_ID"))
+//	private Set<Award> awards;
+	
+	@OneToMany(mappedBy = "tvShow", fetch = FetchType.LAZY)
+	private Set<TvShowAward> tvShowAwardCol;
 
 }

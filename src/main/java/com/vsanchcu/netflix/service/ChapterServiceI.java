@@ -22,5 +22,6 @@ public interface ChapterServiceI {
 	ChapterRestModel getChapterByTvShowIdAndSeasonNumberAndChapterNumber(final Long tvShowId, final int seasonNumber, final int chapterNumber) throws NetflixNotFoundException;
 	Chapter findByTvShowIdAndSeasonNumberAndChapterNumber(final Long tvShowId, final int seasonNumber, final int chapterNumber) throws NetflixNotFoundException;
 	ChapterRestModel updateChapterName(final Chapter chapter, final String name) throws NetflixException;
+	List<Chapter> getChaptersByActor(final Long actorId);
 
 }

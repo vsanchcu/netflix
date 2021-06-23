@@ -7,6 +7,7 @@ public class ConstRest {
 	public static final String RES_SEASON = "/tv-shows/{tvShowId}/seasons";
 	public static final String RES_CHAPTER = "/tv-shows/{tvShowId}/seasons/{seasonNumber}/chapters";
 	public static final String RES_ACTOR = "/actors";
+	public static final String RES_AWARD = "/awards";
 	
 	public static final String PATH_VAR_CATEGORY_ID = "/{categoryId}";
 	public static final String PATH_VAR_TV_SHOW_ID = "/{tvShowId}";

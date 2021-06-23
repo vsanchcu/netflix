@@ -64,7 +64,7 @@ public class ActorController {
 	 *
 	 * @param actorId: actor's id
 	 * @return the actor
-	 * @throws NetflixException Actor doesn't exist
+	 * @throws NetflixNotFoundException Actor doesn't exist
 	 */
 	@ApiOperation(value = "Consultar actor por Id")
 	@ApiResponses({@ApiResponse(code = 200, message = "OK. La consulta se ha realizado correctamente."), 
@@ -78,6 +78,13 @@ public class ActorController {
 				actorService.getActorById(actorId));
 	}
 	
+	/**
+	 * Adds the actor.
+	 *
+	 * @param actor: the new actor
+	 * @return the actor
+	 * @throws NetflixErrorException Error
+	 */
 	@ApiOperation(value = "Añadir actor")
 	@ApiResponses({@ApiResponse(code = 201, message = "OK. Actor registrado correctamente"),
 					@ApiResponse(code = 500, message = "Error al registrar")})
@@ -90,6 +97,15 @@ public class ActorController {
 				actorService.addActor(actor));
 	}
 	
+	/**
+	 * Update actor.
+	 *
+	 * @param actorId: actor's id
+	 * @param actor: the updated actor
+	 * @return the updated actor
+	 * @throws NetflixNotFoundException Actor doesn't exist
+	 * 			NetflixErrorException Error
+	 */
 	@ApiOperation(value = "Actualizar actor")
 	@ApiResponses({@ApiResponse(code = 200, message = "OK. Actor actualizado correctamente"),
 					@ApiResponse(code = 404, message = "El actor no está registrado en BD"), 
@@ -105,6 +121,14 @@ public class ActorController {
 				actorService.updateActor(actorId, actor));
 	}
 	
+	/**
+	 * Delete actor.
+	 *
+	 * @param actorId: actor id
+	 * @return the netflix response
+	 * @throws NetflixNotFoundException Actor doesn't exist
+	 * 			NetflixErrorException Error
+	 */
 	@ApiOperation(value = "Eliminar actor")
 	@ApiResponses({@ApiResponse(code = 200, message = "OK. Actor eliminado correctamente"), 
 					@ApiResponse(code = 404, message = "El actor no está registrado en BD"), 
@@ -118,15 +142,21 @@ public class ActorController {
 		return new NetflixResponse<>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK);
 	}
 	
+	/**
+	 * Gets the tv-shows and chapters by actor.
+	 *
+	 * @param actorId: actor id
+	 * @return the tv-shows and chapters
+	 */
 	@ApiOperation(value = "Consultar series y capítulos de un actor")
 	@ApiResponses({@ApiResponse(code = 200, message = "OK. La consulta se ha realizado correctamente"), 
 					@ApiResponse(code = 404, message = "El acto no está registrado en BD"), 
 					@ApiResponse(code = 500, message = "Error")})
 	@GetMapping(ConstRest.PATH_VAR_ACTOR_ID + ConstRest.RES_TVS_HOW)
-	NetflixResponse<List<TvShowChapterRestModel>> getTvShowsAndChaptersByActor(
+	NetflixResponse<TvShowChapterRestModel> getTvShowsAndChaptersByActor(
 			@ApiParam(name = "actorId", type = "Long", value = "Actor's Id", example = "1", required = true) 
 			@PathVariable Long actorId) {
-		return new NetflixResponse<List<TvShowChapterRestModel>>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK, 
+		return new NetflixResponse<TvShowChapterRestModel>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK, 
 				actorService.getTvShowsAndChaptersByActor(actorId));
 	}
 }
