@@ -8,13 +8,13 @@ package com.vsanchcu.netflix.service;
 
 import java.util.List;
 
-import com.vsanchcu.netflix.entity.TvShowAward;
+import com.vsanchcu.netflix.entity.Award;
 
 /**
  * The Interface AwardServiceI.
  */
-public interface TvShowAwardServiceI {
+public interface AwardServiceI {
 
-	List<TvShowAward> getAwardsByTvShowId(final Long tvShowId);
+	List<Award> getAwardsByTvShowId(final Long tvShowId);
 
 }

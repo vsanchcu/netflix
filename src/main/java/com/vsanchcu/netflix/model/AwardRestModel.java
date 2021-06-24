@@ -1,6 +1,7 @@
 package com.vsanchcu.netflix.model;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,5 +21,8 @@ public class AwardRestModel implements Serializable {
 	
 	@JsonProperty(value = "name")
 	private String name;
+	
+	@JsonProperty(value = "year")
+	private Set<TvShowAwardRestModel> tvShowAwardCol;
 
 }

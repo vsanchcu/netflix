@@ -11,18 +11,18 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.vsanchcu.netflix.entity.TvShowAward;
-import com.vsanchcu.netflix.repository.TvShowAwardRepository;
+import com.vsanchcu.netflix.entity.Award;
+import com.vsanchcu.netflix.repository.AwardRepository;
 
 /**
  * The Class AwardServiceImpl.
  */
 @Service
-public class TvShowAwardServiceImpl implements TvShowAwardServiceI {
+public class AwardServiceImpl implements AwardServiceI {
 
 	/** The award repository. */
 	@Autowired
-	private TvShowAwardRepository awardRepository;
+	private AwardRepository awardRepository;
 
 	/**
 	 * Gets the awards by tv-show's id.
@@ -31,8 +31,8 @@ public class TvShowAwardServiceImpl implements TvShowAwardServiceI {
 	 * @return the awards
 	 */
 	@Override
-	public List<TvShowAward> getAwardsByTvShowId(final Long tvShowId) {
-		return awardRepository.findByTvShowId(tvShowId);
+	public List<Award> getAwardsByTvShowId(final Long tvShowId) {
+		return awardRepository.findByTvShowAwardColTvShowId(tvShowId);
 	}
 
 }

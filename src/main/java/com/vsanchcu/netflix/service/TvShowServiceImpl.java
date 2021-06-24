@@ -7,7 +7,6 @@
 package com.vsanchcu.netflix.service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -17,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.vsanchcu.netflix.entity.Award;
 import com.vsanchcu.netflix.entity.Category;
 import com.vsanchcu.netflix.entity.TvShow;
@@ -25,7 +26,6 @@ import com.vsanchcu.netflix.exception.NetflixErrorException;
 import com.vsanchcu.netflix.exception.NetflixException;
 import com.vsanchcu.netflix.exception.NetflixNotFoundException;
 import com.vsanchcu.netflix.model.AwardRestModel;
-import com.vsanchcu.netflix.model.TvShowAwardRestModel;
 import com.vsanchcu.netflix.model.TvShowRestModel;
 import com.vsanchcu.netflix.repository.TvShowRepository;
 import com.vsanchcu.netflix.util.ConstException;
@@ -42,7 +42,7 @@ public class TvShowServiceImpl implements TvShowServiceI {
 	
 	/** The award service. */
 	@Autowired
-	private TvShowAwardServiceI tvShowAwardService;
+	private AwardServiceI tvShowAwardService;
 	
 	/** The model mapper. */
 	private ModelMapper modelMapper = new ModelMapper();
@@ -165,10 +165,19 @@ public class TvShowServiceImpl implements TvShowServiceI {
 	}
 
 	@Override
-	public List<TvShowAwardRestModel> getAwardsByTvShow(final Long tvShowId) {
-		List<TvShowAward> temp = tvShowAwardService.getAwardsByTvShowId(tvShowId);
-		return tvShowAwardService.getAwardsByTvShowId(tvShowId).stream()
-				.map(award -> modelMapper.map(award, TvShowAwardRestModel.class))
+	public List<AwardRestModel> getAwardsByTvShow(final Long tvShowId) {
+		final List<Award> awards = tvShowAwardService.getAwardsByTvShowId(tvShowId);
+//		for (Award award : awards) {
+//			final List<TvShowAward> tvShowAwards = Lists.newArrayList(award.getTvShowAwardCol());
+//			for (TvShowAward tvShowAward : tvShowAwards) {
+//				if (tvShowAward.getTvShow().getId() != tvShowId) {
+//					tvShowAwards.remove(tvShowAward);
+//				}
+//			}
+//			award.setTvShowAwardCol(Sets.newHashSet(tvShowAwards));
+//		}
+		return awards.stream()
+				.map(award -> modelMapper.map(award, AwardRestModel.class))
 				.collect(Collectors.toList());
 	}
 

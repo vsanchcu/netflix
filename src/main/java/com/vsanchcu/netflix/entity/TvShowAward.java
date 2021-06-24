@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,7 +38,9 @@ public class TvShowAward implements Serializable {
 	@JoinColumn(name = "AWARD_ID", referencedColumnName = "ID")
 	private Award award;
 	
+	@Id
 	@JoinColumn(name = "YEAR")
+	@DateTimeFormat(pattern = "yyyy")
 	private Date year;
 
 }
