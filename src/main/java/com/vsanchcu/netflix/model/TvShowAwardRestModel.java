@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,10 @@ public class TvShowAwardRestModel implements Serializable {
 
 	private static final long serialVersionUID = 1663538617691857481L;
 
+	@JsonProperty(value = "premio")
+	private AwardRestModel award;
+	
+	@JsonProperty(value = "year")
 	@JsonFormat(pattern = "yyyy")
 	private Date year;
 

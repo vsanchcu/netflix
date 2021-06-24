@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vsanchcu.netflix.entity.Category;
 import com.vsanchcu.netflix.exception.NetflixException;
 import com.vsanchcu.netflix.exception.NetflixNotFoundException;
-import com.vsanchcu.netflix.model.AwardRestModel;
+import com.vsanchcu.netflix.model.TvShowAwardRestModel;
 import com.vsanchcu.netflix.model.TvShowRestModel;
 import com.vsanchcu.netflix.response.NetflixResponse;
 import com.vsanchcu.netflix.service.TvShowServiceI;
@@ -168,10 +168,10 @@ public class TvShowController {
 	@ApiOperation(value = "Consultar premios de una serie")
 	@ApiResponses(@ApiResponse(code = 200, message = "OK. La consulta se ha realizado correctamente."))
 	@GetMapping(ConstRest.PATH_VAR_TV_SHOW_ID + ConstRest.RES_AWARD)
-	NetflixResponse<List<AwardRestModel>> getAwardsByTvShowId(
+	NetflixResponse<List<TvShowAwardRestModel>> getAwardsByTvShowId(
 			@ApiParam(name = "tvShowId", type = "Long", value = "Tv show's Id", example = "1", required = true) 
 			@PathVariable Long tvShowId) {
-		return new NetflixResponse<List<AwardRestModel>>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK, 
+		return new NetflixResponse<List<TvShowAwardRestModel>>(ConstCommon.SUCCESS, HttpStatus.OK, ConstCommon.OK, 
 				tvShowService.getAwardsByTvShow(tvShowId));
 	}
 

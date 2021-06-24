@@ -37,7 +37,7 @@ public class SwaggerConfig {
 	public Docket api() {
 		return new Docket(DocumentationType.SWAGGER_2)
 				.select()
-				.apis(RequestHandlerSelectors.any())
+				.apis(RequestHandlerSelectors.basePackage("com.vsanchcu.netflix"))
 				.paths(PathSelectors.any())
 				.build()
 				.apiInfo(getApiInfo());
