@@ -1,8 +1,8 @@
 package com.vsanchcu.netflix.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import lombok.AllArgsConstructor;
@@ -21,10 +21,10 @@ public class TvShowAwardKey implements Serializable {
 
 	private static final long serialVersionUID = -2194306984487130951L;
 
-	@Column(name = "TV_SHOW_ID")
-	private Long tvShowId;
+	private Long tvShow;
 	
-	@Column(name = "AWARD_ID")
-	private Long awardId;
+	private Long award;
+	
+	private Date year;
 
 }

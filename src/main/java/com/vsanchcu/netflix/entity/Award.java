@@ -11,7 +11,6 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -48,7 +47,7 @@ public class Award implements Serializable {
 //	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "awards")
 //	private Set<TvShow> tvShows;
 	
-	@OneToMany(mappedBy = "award", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "award")
 	private Set<TvShowAward> tvShowAwardCol;
 
 }

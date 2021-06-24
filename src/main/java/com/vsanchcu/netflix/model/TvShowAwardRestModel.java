@@ -1,7 +1,7 @@
 package com.vsanchcu.netflix.model;
 
 import java.io.Serializable;
-import java.time.Year;
+import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -22,6 +22,6 @@ public class TvShowAwardRestModel implements Serializable {
 	
 	@JsonProperty(value = "year")
 	@JsonFormat(pattern = "yyyy")
-	private Year year;
+	private Date year;
 
 }

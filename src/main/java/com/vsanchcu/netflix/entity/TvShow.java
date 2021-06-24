@@ -95,7 +95,7 @@ public class TvShow implements Serializable {
 //			inverseJoinColumns = @JoinColumn(name = "AWARD_ID"))
 //	private Set<Award> awards;
 	
-	@OneToMany(mappedBy = "tvShow", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "tvShow")
 	private Set<TvShowAward> tvShowAwardCol;
 
 }
