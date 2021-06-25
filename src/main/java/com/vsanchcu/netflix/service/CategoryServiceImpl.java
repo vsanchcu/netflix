@@ -13,7 +13,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.vsanchcu.netflix.exception.NetflixException;
 import com.vsanchcu.netflix.exception.NetflixNotFoundException;
 import com.vsanchcu.netflix.model.CategoryRestModel;
 import com.vsanchcu.netflix.repository.CategoryRepository;
@@ -53,7 +52,7 @@ public class CategoryServiceImpl implements CategoryServiceI {
 	 */
 	@Override
 	public CategoryRestModel getCategoryById(Long id) 
-			throws NetflixException {
+			throws NetflixNotFoundException {
 		return categoryRepository.findById(id)
 				.map(category -> modelMapper.map(category, CategoryRestModel.class))
 				.orElseThrow(() -> new NetflixNotFoundException(ConstException.MSG_NON_EXIST_CATEGORY));
